@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F1F2ED">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Deux soirs">
+<title>Deux soirs par semaine — le répertoire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1F2ED;--paper-2:#FFF;--ink:#18231F;--ink-soft:#5A6660;--rule:#D9DCD4;--accent:#B0522A;
+  --display:'Bricolage Grotesque',system-ui,sans-serif;--body:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:1.08;margin:0}
+button{font-family:inherit}
+.wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+
+/* NAV */
+.topbar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.topbar .wrap{display:flex;align-items:center;gap:22px;height:60px}
+.brand{font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--accent)}
+.nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto}
+.nav button{font-family:var(--display);font-weight:600;font-size:14px;padding:8px 14px;border:0;background:transparent;color:var(--ink-soft);cursor:pointer;border-radius:2px;white-space:nowrap}
+.nav button:hover{color:var(--ink)}
+.nav button[aria-current="true"]{background:var(--ink);color:var(--paper)}
+.view{display:none}.view.on{display:block;animation:f .25s ease}
+@keyframes f{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* HERO */
+.hero{padding:56px 0 30px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin:0}
+.hero h1{font-size:clamp(38px,6.5vw,68px);margin:12px 0 16px}
+.lede{font-size:18px;max-width:54ch;color:var(--ink-soft);margin:0}
+.lede b{color:var(--ink);font-weight:600}
+.band{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:36px 0 0}
+.band figure{margin:0;position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--rule)}
+.band img{width:100%;height:100%;object-fit:cover;display:block}
+.band figcaption{position:absolute;inset:auto 0 0;padding:18px 10px 7px;font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:#fff;background:linear-gradient(transparent,rgba(10,16,14,.75))}
+
+/* SEASON PICKER */
+.seasonbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 24px}
+.seasonbar .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-right:6px}
+.sbtn{font-family:var(--display);font-weight:600;font-size:14px;padding:7px 15px;border:1px solid var(--rule);background:transparent;color:var(--ink-soft);cursor:pointer;border-radius:2px}
+.sbtn:hover{border-color:var(--accent);color:var(--ink)}
+.sbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+section{padding:46px 0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:20px;border-bottom:2px solid var(--ink);padding-bottom:9px}
+.sec-head .idx{font-family:var(--mono);font-size:11px;color:var(--ink-soft)}
+.sec-head h2{font-size:clamp(22px,3.2vw,30px)}
+.intro{max-width:62ch;color:var(--ink-soft);margin:0 0 24px}
+
+/* CARTE (accueil) */
+.carte{list-style:none;margin:0;padding:0;border:1px solid var(--rule);background:var(--paper-2)}
+.carte li{display:grid;grid-template-columns:84px 1fr;gap:16px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--rule);cursor:pointer}
+.carte li:last-child{border-bottom:0}
+.carte li:hover{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.carte li:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.carte .ill{width:84px;height:64px;color:var(--ink);opacity:.85;overflow:hidden;background:var(--rule);flex:0 0 auto}
+.carte .ill svg{width:100%;height:100%;display:block}
+.carte .ill img{width:100%;height:100%;object-fit:cover;display:block}
+.carte .nom{font-family:var(--display);font-weight:600;font-size:16px;line-height:1.25}
+.carte .nom em{display:flex;flex-wrap:wrap;align-items:center;align-content:flex-start;gap:5px;font-family:var(--body);font-style:normal;color:var(--ink-soft);font-weight:400;margin-top:6px}
+.carte .nom em .pill{flex:0 0 auto;align-self:center}
+.carte .dur{font-family:var(--mono);font-size:12px;color:var(--accent)}
+
+/* LISTE RECETTES */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.toolbar input{flex:1;min-width:0;padding:9px 13px;border:1px solid var(--rule);background:var(--paper-2);font-family:inherit;font-size:15px;border-radius:2px;color:var(--ink)}
+.toolbar input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border:1px solid var(--rule);background:transparent;cursor:pointer;border-radius:2px;color:var(--ink-soft)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.rcard{border:1px solid var(--rule);background:var(--paper-2);cursor:pointer;text-align:left;padding:0;display:flex;flex-direction:column;transition:.15s}
+.rcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+.thumb{position:relative;aspect-ratio:4/3;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 15%,var(--paper)),var(--paper))}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thumb svg{position:absolute;inset:14%;width:72%;height:72%;color:var(--ink);opacity:.8}
+.rcard .body{padding:13px 14px 15px}
+.rcard .ttl{display:block;font-family:var(--display);font-weight:800;letter-spacing:-.02em;font-size:15px;line-height:1.25;margin-bottom:6px}
+.rmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ink-soft);text-transform:uppercase;display:flex;gap:5px;flex-wrap:wrap;align-items:center;align-content:flex-start}
+.rmeta .pill{flex:0 0 auto;align-self:center}
+.rmeta .st{color:var(--accent)}
+.pill{display:inline-block;padding:3px 8px;border-radius:99px;font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;line-height:1.5}
+.pill.tot{background:var(--ink);color:var(--paper)}
+.pill.act{background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent)}
+.pill.midi{border:1px solid var(--accent);color:var(--accent)}
+.pill.libre{border:1px solid var(--rule);color:var(--ink-soft)}
+.pill.star{background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent)}
+.empty-msg{color:var(--ink-soft);padding:30px 0}
+.allrow{margin:-8px 0 18px}
+.lnk,.empty-msg button{font-family:var(--display);font-weight:600;font-size:inherit;background:transparent;border:0;border-bottom:1px solid var(--accent);color:var(--accent);cursor:pointer;padding:1px 0}
+.empty-msg button{display:block;font-size:15px;margin-top:10px}
+.lnk:hover,.empty-msg button:hover{color:var(--ink);border-color:var(--ink)}
+
+/* DÉTAIL */
+.detail{display:none}
+.detail.on{display:block}
+.back{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:0;color:var(--ink-soft);cursor:pointer;padding:8px 0;margin-bottom:14px}
+.back:hover{color:var(--accent)}
+.dhead{display:grid;grid-template-columns:320px 1fr;gap:26px;align-items:start;margin-bottom:30px}
+.dshot{position:relative;aspect-ratio:4/3;overflow:hidden;border:1px solid var(--rule);background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 15%,var(--paper)),var(--paper))}
+.dshot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dshot svg{position:absolute;inset:16%;width:68%;height:68%;color:var(--ink);opacity:.8}
+.dhead h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:12px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border:1px solid var(--rule);color:var(--ink-soft)}
+.tag.acc{border-color:var(--accent);color:var(--accent)}
+.tag.solid{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.dcols{display:grid;grid-template-columns:300px 1fr;gap:34px;align-items:start}
+.ing-box{background:var(--paper-2);border:1px solid var(--rule);padding:18px 18px 20px;position:sticky;top:76px}
+.ing-box h3{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.ing-list{list-style:none;margin:0;padding:0}
+.ing-list li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--rule);font-size:14.5px}
+.ing-list li:last-child{border-bottom:0}
+.ing-list input{margin-top:5px;accent-color:var(--accent);flex:0 0 auto}
+.ing-list label{cursor:pointer}
+.ing-list input:checked + label{opacity:.45;text-decoration:line-through}
+.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:14px;padding:13px 0;border-bottom:1px solid var(--rule);font-size:15.5px}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent);padding-top:4px}
+.tipbox{margin-top:22px;background:color-mix(in srgb,var(--accent) 9%,transparent);border-left:3px solid var(--accent);padding:14px 16px;font-size:14.5px}
+.tipbox b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.midibox{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline;margin:18px 0 0;padding:14px 16px;background:var(--paper-2);border:1px solid var(--rule);border-left:3px solid var(--accent)}
+.midibox .h{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
+.midibox p{margin:0;font-size:15px}
+.midibox.libre{border-left-color:var(--ink-soft)}
+.midibox.libre .h{color:var(--ink-soft)}
+.midibox.libre p{color:var(--ink-soft)}
+
+html.w-sm .midibox{grid-template-columns:1fr;gap:6px}
+@media(max-width:720px){
+.midibox{grid-template-columns:1fr;gap:6px}
+}
+.nutri{margin-top:18px;border-top:1px solid var(--rule);padding-top:14px}
+.nutri h4{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px}
+.nutri dl{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0}
+.nutri dd{margin:0;font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.02em;line-height:1.1}
+.nutri dt{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px}
+.nutri .src{font-size:11.5px;color:var(--ink-soft);margin:11px 0 0;line-height:1.45}
+.wake{display:flex;align-items:center;gap:9px;margin:20px 0 0;font-size:14px;color:var(--ink-soft);cursor:pointer}
+.wake input{width:17px;height:17px;accent-color:var(--accent)}
+
+/* TABLEAUX */
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--ink)}
+td{padding:10px;border-bottom:1px solid var(--rule);vertical-align:top}
+td.q{font-family:var(--mono);font-size:13px;white-space:nowrap;color:var(--accent)}
+td.u{color:var(--ink-soft);font-size:14px}
+tr:hover td{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.tbl-title{font-size:16px;margin:30px 0 8px}
+.vins{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-bottom:10px}
+.vin{background:var(--paper-2);border:1px solid var(--rule);padding:17px 18px}
+.vin h3{font-size:15.5px;margin-bottom:9px}
+.vin-ing{margin:0 0 10px;font-size:14px;border-left:2px solid var(--accent);padding-left:11px;color:var(--ink-soft)}
+.vin-use{margin:0 0 11px;font-size:14.5px}
+.vin-tip{margin:0;font-size:13.5px;color:var(--ink-soft)}
+.vin-tip b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:3px}
+.bdg{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;margin-left:7px;white-space:nowrap;vertical-align:middle}
+.bdg.top{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.bdg.ok{border:1px solid var(--rule);color:var(--ink-soft)}
+.tbl-title span{font-family:var(--body);font-weight:400;font-size:14px;color:var(--ink-soft)}
+
+/* PLAN */
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.rule{background:var(--paper);padding:19px 17px}
+.rule h3{font-size:15px;margin-bottom:6px}
+.rule p{margin:0;font-size:14px;color:var(--ink-soft)}
+.rule .k{font-family:var(--mono);font-size:10.5px;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:9px}
+.prep{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.prep div{border-top:2px solid var(--ink);padding-top:13px}
+.prep h3{font-size:15px;margin-bottom:5px}
+.prep p{margin:0;font-size:14px;color:var(--ink-soft)}
+.prep .gain{font-family:var(--mono);font-size:10.5px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:7px}
+.kit{margin-top:20px;border-left:3px solid var(--accent);padding:4px 0 4px 16px;font-size:15px}
+.dark{background:var(--ink);color:var(--paper)}
+.dark .sec-head{border-color:var(--paper)}
+.dark .intro{color:#AFBAB4}
+.dark td{border-color:#2E3B36}
+.dark th{border-color:var(--paper);color:#AFBAB4}
+.dark td.q{color:#D9A87E}
+.dark td.u{color:#AFBAB4}
+.dark tr:hover td{background:#212D28}
+footer{border-top:1px solid var(--rule);padding:30px 0 56px;font-size:14px;color:var(--ink-soft)}
+
+
+html.w-md .dcols{grid-template-columns:1fr;gap:26px}
+html.w-md .ing-box{position:static}
+html.w-md .dhead{grid-template-columns:1fr;gap:18px}
+html.w-md .band{grid-template-columns:repeat(2,1fr)}
+@media(max-width:860px){
+.dcols{grid-template-columns:1fr;gap:26px}
+.ing-box{position:static}
+.dhead{grid-template-columns:1fr;gap:18px}
+.band{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ============ TÉLÉPHONE ============ */
+@media(max-width:720px){
+ body{font-size:16px}
+ .wrap{padding:0 16px}
+ section{padding:30px 0}
+
+ /* Navigation en bas, à portée de pouce.
+    La topbar perd son backdrop-filter ici : un ancêtre filtré devient le bloc conteneur
+    de ses descendants position:fixed, ce qui collerait la nav sous la topbar
+    au lieu du bas de l'écran. */
+ .topbar{position:sticky;top:0;backdrop-filter:none;background:var(--paper)}
+ .topbar .wrap{height:52px}
+ .brand{font-size:15px}
+ .nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:repeat(4,1fr);
+   gap:0;background:color-mix(in srgb,var(--paper) 96%,transparent);backdrop-filter:blur(12px);
+   border-top:1px solid var(--rule);padding:6px 6px calc(6px + env(safe-area-inset-bottom));margin:0;overflow:visible}
+ .nav button{font-size:12px;padding:9px 4px;min-height:44px;border-radius:8px;text-align:center;line-height:1.15}
+ .nav button[aria-current="true"]{background:var(--accent);color:#fff}
+ body{padding-bottom:74px}
+
+ .hero{padding:26px 0 14px}
+ .hero h1{font-size:clamp(34px,11vw,46px)}
+ .lede{font-size:16.5px}
+ .band{margin-top:24px;gap:6px}
+
+ /* saison : rangée scrollable qui reste accessible */
+ .seasonbar{gap:6px;overflow-x:auto;flex-wrap:nowrap;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:4px;margin-bottom:18px}
+ .seasonbar::-webkit-scrollbar{display:none}
+ .seasonbar .lbl{display:none}
+ .sbtn{flex:0 0 auto;scroll-snap-align:start;min-height:40px;padding:8px 16px}
+
+ /* carte d'accueil */
+ .carte li{grid-template-columns:72px 1fr;gap:12px;padding:12px 14px;min-height:64px}
+ .carte .ill{width:72px;height:54px}
+ .carte .nom{font-size:15.5px}
+ .carte .nom em{font-size:12px}
+
+ /* recherche et filtres */
+ .toolbar{gap:6px}
+ .toolbar input{font-size:16px;min-height:44px;flex:1 0 100%}
+ .chip{flex:1 1 calc(33.33% - 4px);min-height:42px;font-size:11px;padding:8px 5px;text-align:center;line-height:1.2}
+
+ /* liste : deux colonnes de vignettes */
+ .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+ .rcard .ttl{font-size:14px}
+ .rcard .body{padding:10px 11px 12px}
+ .rmeta{font-size:9.5px;gap:5px}
+ .thumb{aspect-ratio:1/1}
+
+ /* fiche recette */
+ .dshot{aspect-ratio:16/10}
+ .dhead h2{font-size:26px}
+ .back{position:sticky;top:52px;z-index:20;background:var(--paper);width:100%;text-align:left;
+   padding:12px 0;border-bottom:1px solid var(--rule);margin-bottom:16px;min-height:44px}
+ .ing-list li{padding:11px 0;font-size:16px;min-height:46px;align-items:center}
+ .ing-list input{width:22px;height:22px;margin-top:0}
+ .steps li{font-size:16.5px;padding:15px 0;grid-template-columns:28px 1fr;gap:11px}
+ .wake{display:flex;align-items:center;gap:9px;margin:16px 0 0;font-size:14px;color:var(--ink-soft)}
+ .wake input{width:20px;height:20px;accent-color:var(--accent)}
+
+ /* tableaux transformés en fiches empilées */
+ table{border:0}
+ thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+ tr{display:block;border:1px solid var(--rule);background:var(--paper-2);margin-bottom:8px;padding:11px 13px}
+ td{display:block;border:0;padding:2px 0}
+ td:first-child{font-weight:600;font-size:15.5px}
+ td.q{font-size:12.5px}
+ td.u{font-size:13.5px;line-height:1.45}
+ tr:hover td{background:transparent}
+ .dark tr{border-color:#2E3B36;background:#1E2925}
+ .tbl-title{margin-top:26px}
+ .rules{grid-template-columns:1fr}
+ .vins{grid-template-columns:1fr}
+ .prep{grid-template-columns:1fr;gap:14px}
+ footer{padding-bottom:30px}
+}
+
+html.w-xs .grid{grid-template-columns:1fr}
+@media(max-width:360px){
+.grid{grid-template-columns:1fr}
+}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="topbar"><div class="wrap">
+  <div class="brand">Deux soirs <span>/</span> semaine</div>
+  <nav class="nav">
+    <button data-view="accueil" aria-current="true">La carte</button>
+    <button data-view="recettes">Recettes</button>
+    <button data-view="garde">Garde-manger</button>
+    <button data-view="plan">Le plan</button>
+  </nav>
+</div></header>
+
+<!-- ACCUEIL -->
+<main>
+<div id="accueil" class="view on">
+  <div class="hero wrap">
+    <p class="eyebrow">38 plats · 4 saisons · légumes + protéines + féculents</p>
+    <h1>Deux soirs<br>par semaine.</h1>
+    <p class="lede">Je prends deux soirs de la semaine. Tu regardes la carte de la saison, tu dis ce qui te fait envie, et c'est prêt entre 19h15 et 19h30 — <b>rien qui empiète sur ce que tu cuisines déjà</b>.</p>
+    <div class="band" id="band"></div>
+  </div>
+  <section class="wrap">
+    <div class="sec-head"><span class="idx">La carte</span><h2 id="carte-titre"></h2></div>
+    <div class="seasonbar" id="sb-accueil"></div>
+    <p class="intro" id="carte-desc"></p>
+    <ul class="carte" id="carte"></ul>
+    <p class="intro" style="margin-top:18px">Les plats plus longs, qui demandent une heure de four, sont réservés aux week-ends. <button type="button" class="lnk" data-goto="recettes">Voir les trente-huit recettes</button>.</p>
+  </section>
+</div>
+
+<!-- RECETTES -->
+<div id="recettes" class="view">
+  <section class="wrap">
+    <div id="liste">
+      <div class="sec-head"><span class="idx">01</span><h2>Les trente-huit recettes</h2></div>
+      <p class="intro">Quantités pour quatre gros mangeurs : deux adultes, une ado qui mange comme une adulte et une enfant de huit ans. Les valeurs nutritionnelles de chaque fiche sont estimées à partir de ces quantités, pour une part sur quatre. Comptez 75 à 80 g de féculent sec par personne, 250 à 280 g de pommes de terre, 150 g de poisson ou de viande. Le temps affiché est le temps total, de l'arrivée en cuisine à l'assiette : il inclut le préchauffage du four, la montée en pression du Cookeo et le repos avant de servir. Le détail de chaque fiche indique en plus le temps réellement passé debout devant le plan de travail. Ces durées sont estimées geste par geste pour un cuisinier amateur travaillant au couteau — une mandoline fait gagner 5 minutes sur tous les plats à pommes de terre. L'étoile marque les plats réalisables sans aucune course.</p>
+      <div class="seasonbar" id="sb-recettes"></div>
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="Chercher un plat ou un ingrédient…" aria-label="Recherche">
+        <button class="chip" id="f-express" aria-pressed="false">Soir de semaine</button>
+        <button class="chip" id="f-star" aria-pressed="false">★ Sans course</button>
+        <button class="chip" id="f-tard" aria-pressed="false">Choix à 17 h</button>
+        <button class="chip" id="f-veg" aria-pressed="false">Vegan</button>
+        <button class="chip" id="f-all" aria-pressed="false">Toutes saisons</button>
+      </div>
+      <p class="allrow"><button type="button" class="lnk" id="f-reset"></button></p>
+      <div class="grid" id="grid"></div>
+      <p class="empty-msg" id="empty" style="display:none" role="status" aria-live="polite"></p>
+    </div>
+    <div class="detail" id="detail"></div>
+  </section>
+</div>
+
+<!-- GARDE-MANGER -->
+<div id="garde" class="view">
+  <section class="wrap">
+    <div class="sec-head"><span class="idx">02</span><h2>Le garde-manger</h2></div>
+    <p class="intro">Ce qu'il faut avoir en permanence pour qu'un plat décidé à midi soit faisable le soir même, sans passer au magasin. Filtre par saison pour ne voir que ce qui sert vraiment en ce moment.</p>
+    <div class="seasonbar" id="sb-garde"></div>
+    <div id="pantry"></div>
+    <p class="kit"><b>Le kit de secours</b> — <span id="kit"></span>. Tant que ces neuf-là sont présents, aucun soir ne peut tomber à l'eau.</p>
+    <h3 class="tbl-title">À acheter frais <span id="fresh-label"></span></h3>
+    <p class="intro" id="fresh"></p>
+    <div class="sec-head" style="margin-top:52px"><span class="idx">Assaisonnement</span><h2>Les quatre vinaigrettes</h2></div>
+    <p class="intro" id="vi"></p>
+    <div class="vins" id="vins"></div>
+    <div class="sec-head" style="margin-top:52px"><span class="idx">Surgelé ou frais</span><h2>Ce qui gagne à être congelé</h2></div>
+    <p class="intro" id="fi"></p>
+    <h3 class="tbl-title">Toujours au congélateur <span>— rien à gagner à les acheter frais</span></h3>
+    <table><thead><tr><th>Légume</th><th>Pourquoi</th></tr></thead><tbody id="tb-frozen"></tbody></table>
+    <h3 class="tbl-title">Toujours frais <span>— la congélation les abîme</span></h3>
+    <table><thead><tr><th>Légume</th><th>Pourquoi</th></tr></thead><tbody id="tb-fresh"></tbody></table>
+    <p class="kit"><b>La règle de cuisson</b> — <span id="fr"></span></p>
+    <p class="kit" style="border-color:var(--ink)"><b>La règle de rotation</b> — le stock ne se décide pas à l'avance, il se reconstitue : dès qu'une référence tombe à sa dernière unité, elle part sur la liste de courses, jamais après. C'est ce qui permet de ne rien anticiper le soir même.</p>
+  </section>
+</div>
+
+<!-- PLAN -->
+<div id="plan" class="view">
+  <section class="wrap">
+    <div class="sec-head"><span class="idx">03</span><h2>Le plan</h2></div>
+    <p class="intro">Ce qui fait échouer ce genre de promesse, ce n'est pas la cuisine : c'est décider quoi faire, avoir les ingrédients sous la main, et tenir l'heure du repas. Ces cinq règles règlent les trois.</p>
+    <div class="rules">
+      <div class="rule"><span class="k">Règle 1</span><h3>Deux soirs fixes</h3><p>Toujours les mêmes jours, pour que ce soit acquis et que tu puisses compter dessus.</p></div>
+      <div class="rule"><span class="k">Règle 2</span><h3>Trente-huit plats</h3><p>Quatre saisons, aucun doublon avec tes classiques. <span id="sem-count"></span> tiennent vraiment en semaine, les autres sont des plats de week-end.</p></div>
+      <div class="rule"><span class="k">Règle 3</span><h3>Tu choisis à midi, je cuisine</h3><p>Tu regardes la carte et tu me dis à midi ce qui te fait envie. C'est la seule chose que le système demande — et pour <span id="tard-count"></span> plats, même pas : ils se décident encore à 17 h.</p></div>
+      <div class="rule"><span class="k">Règle 4</span><h3>Le stock d'abord</h3><p><span id="star-count"></span> plats se font sans aucune course. Pour les autres, deux ou trois articles frais suffisent.</p></div>
+      <div class="rule"><span class="k">Règle 5</span><h3>Deux façons de cuisiner</h3><p>Les plats au four et au Cookeo tournent seuls pendant que je m'occupe des filles. Les poêlées et les pâtes demandent d'être devant — mais vingt minutes, pas plus. La pastille orange de chaque plat dit lequel des deux c'est.</p></div>
+    </div>
+  </section>
+  <section class="dark"><div class="wrap">
+    <div class="sec-head"><span class="idx">Urgence</span><h2>Les plats d'urgence</h2></div>
+    <p class="intro"><span id="urg-count"></span> plats sans aucune course : 45 minutes maximum jusqu'à l'assiette, et 20 minutes de présence réelle en cuisine au plus. La liste qui garantit qu'un imprévu ne fasse pas sauter le repas — à une condition, la seule du système : que la protéine soit sortie du congélateur à midi. Les <span id="tard-count2"></span> plats qui n'en demandent même pas sont marqués « décidable à 17 h » dans la liste.</p>
+    <table><thead><tr><th>Plat</th><th>Total</th><th>Ce qu'il faut avoir</th></tr></thead><tbody id="urg"></tbody></table>
+  </div></section>
+  <section class="wrap">
+    <div class="sec-head"><span class="idx">Anticipation</span><h2>La prépa d'avance</h2></div>
+    <p class="intro">Un geste à midi, le jour même — c'est lui qui fait tenir tout le reste. Le week-end ne sert qu'à prendre de l'avance quand l'envie est là : rien ici n'est obligatoire, et un système qui réclame une heure de dimanche ne passe pas l'hiver.</p>
+    <div class="prep">
+      <div><span class="gain">Le geste de midi</span><h3>Sortir la protéine</h3><p>Dès qu'elle a dit ce qu'elle voulait. Sept heures au frigo suffisent pour des pavés, des filets ou du haché. Oublié ? Trente minutes en sac étanche dans l'eau froide rattrapent le coup.</p></div>
+      <div><span class="gain">Gain : 15 min</span><h3>Boulettes crues congelées</h3><p>Formées sur un plateau puis en sachet. Elles cuisent directement congelées, 22 min au lieu de 18.</p></div>
+      <div><span class="gain">Gain : la marinade</span><h3>Marinades en sachet</h3><p>Le poulet congelé dans sa marinade. Il marine pendant qu'il décongèle.</p></div>
+      <div><span class="gain">Gain : 20 min</span><h3>Riz ou lentilles cuits</h3><p>Trois jours au frigo. Le gratin de riz tombe à 35 minutes, la salade de lentilles à 25.</p></div>
+      <div><span class="gain">Gain : 5 min</span><h3>Légumes émincés</h3><p>Carottes, courgettes, poireaux en boîte hermétique. Les papillotes tombent à cinq minutes.</p></div>
+      <div><span class="gain">Gain : 10 min</span><h3>Béchamel légère</h3><p>Quatre jours au frigo. Tous les gratins en profitent.</p></div>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer class="wrap">
+  <p>Trente-huit plats · <span id="star-count2"></span> réalisables sans aucune course · deux soirs par semaine.<br>
+  <span style="font-size:12px;opacity:.75">Photographies : Pexels, licence libre. Les fiches sans photo portent l'illustration de leur famille de plat.</span></p>
+</footer>
+
+<script>
+const ART={"papillote":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M22 78 L38 38 L96 38 L82 78 Z\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M38 38 L30 26 L88 26 L96 38\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M45 60 q12 -10 24 0 q-12 10 -24 0 Z\" fill=\"var(--accent)\" opacity=\".85\"/><path d=\"M69 60 l9 -6 v12 Z\" fill=\"var(--accent)\" opacity=\".85\"/><circle cx=\"52\" cy=\"58\" r=\"1.6\" fill=\"var(--paper-2)\"/><path d=\"M34 70 h18 M60 70 h14\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".45\"/></svg>","gratin":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><rect x=\"20\" y=\"44\" width=\"80\" height=\"42\" rx=\"5\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M14 56 h6 M100 56 h6\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M26 52 q10 -8 20 0 q10 -8 20 0 q10 -8 20 0 q6 -5 8 -1\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"26\" y=\"56\" width=\"68\" height=\"24\" rx=\"3\" fill=\"var(--accent)\" opacity=\".35\"/><path d=\"M32 66 h56 M32 73 h44\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".5\"/></svg>","tarte":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><circle cx=\"60\" cy=\"62\" r=\"36\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"60\" cy=\"62\" r=\"29\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".5\"/><path d=\"M60 62 L60 33 A29 29 0 0 1 85 47 Z\" fill=\"var(--accent)\" opacity=\".85\"/><circle cx=\"48\" cy=\"72\" r=\"4\" fill=\"var(--accent)\" opacity=\".35\"/><circle cx=\"70\" cy=\"76\" r=\"3\" fill=\"var(--accent)\" opacity=\".35\"/><circle cx=\"44\" cy=\"55\" r=\"3\" fill=\"var(--accent)\" opacity=\".35\"/></svg>","salade":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M22 56 h76 a38 38 0 0 1 -76 0 Z\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M30 62 q10 8 20 2 q10 8 22 -2\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".5\"/><circle cx=\"46\" cy=\"48\" r=\"6\" fill=\"var(--accent)\" opacity=\".85\"/><circle cx=\"66\" cy=\"46\" r=\"5\" fill=\"var(--accent)\" opacity=\".35\"/><circle cx=\"80\" cy=\"52\" r=\"4\" fill=\"var(--accent)\" opacity=\".85\"/><path d=\"M60 94 v8\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>","boulettes":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M18 58 h84 a42 42 0 0 1 -84 0 Z\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"44\" cy=\"66\" r=\"9\" fill=\"var(--accent)\" opacity=\".85\"/><circle cx=\"66\" cy=\"72\" r=\"9\" fill=\"var(--accent)\" opacity=\".85\"/><circle cx=\"80\" cy=\"62\" r=\"7\" fill=\"var(--accent)\" opacity=\".35\"/><circle cx=\"56\" cy=\"54\" r=\"7\" fill=\"var(--accent)\" opacity=\".35\"/><path d=\"M30 52 q6 -6 12 0\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".5\"/></svg>","volaille":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><rect x=\"16\" y=\"52\" width=\"88\" height=\"34\" rx=\"4\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M44 70 q-10 -18 6 -24 q16 -6 20 10 q4 12 -8 16 q-12 4 -18 -2 Z\" fill=\"var(--accent)\" opacity=\".85\"/><path d=\"M62 76 l14 10\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"78\" cy=\"88\" r=\"3\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><rect x=\"26\" y=\"72\" width=\"10\" height=\"8\" rx=\"2\" fill=\"var(--accent)\" opacity=\".35\"/><rect x=\"84\" y=\"60\" width=\"12\" height=\"9\" rx=\"2\" fill=\"var(--accent)\" opacity=\".35\"/></svg>","oeufs":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><circle cx=\"60\" cy=\"62\" r=\"34\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M38 62 q6 -18 24 -14 q20 4 18 20 q-2 16 -22 16 q-22 0 -20 -22 Z\" fill=\"var(--accent)\" opacity=\".35\"/><circle cx=\"60\" cy=\"60\" r=\"11\" fill=\"var(--accent)\" opacity=\".85\"/><path d=\"M26 62 h-8 M94 62 h8\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>","poisson":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><rect x=\"18\" y=\"50\" width=\"84\" height=\"38\" rx=\"4\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M34 74 q4 -18 26 -18 q22 0 26 18 Z\" fill=\"var(--accent)\" opacity=\".85\"/><path d=\"M40 68 h40 M44 62 h32\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".45\"/><path d=\"M30 44 q6 -8 12 0\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".5\"/><circle cx=\"88\" cy=\"78\" r=\"4\" fill=\"var(--accent)\" opacity=\".35\"/></svg>","patate":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M30 62 q-6 -24 18 -28 q26 -4 38 12 q12 16 -4 30 q-18 16 -38 8 q-16 -6 -14 -22 Z\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M44 56 q16 -8 32 2 q-4 20 -18 22 q-14 2 -14 -24 Z\" fill=\"var(--accent)\" opacity=\".85\"/><circle cx=\"56\" cy=\"64\" r=\"2.4\" fill=\"var(--paper-2)\"/><circle cx=\"66\" cy=\"70\" r=\"2\" fill=\"var(--paper-2)\"/></svg>","soupe":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M24 60 h72 a36 36 0 0 1 -72 0 Z\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M20 60 h80\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M34 66 q26 10 52 0 a26 26 0 0 1 -52 0 Z\" fill=\"var(--accent)\" opacity=\".85\"/><path d=\"M48 40 q6 -8 0 -16 M62 42 q7 -9 0 -18 M76 40 q6 -8 0 -16\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".55\"/></svg>","poele":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M20 54 h68 a34 34 0 0 1 -68 0 Z\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M88 58 l22 -6\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M108 50 l6 -2 a3 3 0 0 1 2 5 l-6 2 Z\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"42\" cy=\"64\" r=\"7\" fill=\"var(--accent)\" opacity=\".85\"/><circle cx=\"62\" cy=\"70\" r=\"6\" fill=\"var(--accent)\" opacity=\".35\"/><circle cx=\"76\" cy=\"62\" r=\"5\" fill=\"var(--accent)\" opacity=\".85\"/><path d=\"M34 40 q6 -9 0 -16 M52 42 q7 -10 0 -18\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".5\"/></svg>","pates":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><circle cx=\"60\" cy=\"64\" r=\"36\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"60\" cy=\"64\" r=\"27\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".45\"/><path d=\"M38 62 q11 -11 22 -2 q11 9 22 -2 M36 70 q12 -10 24 -1 q11 9 22 -3 M40 54 q10 -9 20 -1 q10 8 20 -2 M38 78 q12 -9 23 -1 q10 7 20 -3\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"52\" cy=\"58\" r=\"4\" fill=\"var(--accent)\" opacity=\".85\"/><circle cx=\"72\" cy=\"70\" r=\"3.5\" fill=\"var(--accent)\" opacity=\".85\"/><path d=\"M62 50 q5 -6 10 -3 q-3 6 -10 3 Z\" fill=\"var(--accent)\" opacity=\".35\"/></svg>","mijote":"<svg viewBox=\"0 0 120 120\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M26 54 h68 v22 a14 14 0 0 1 -14 14 h-40 a14 14 0 0 1 -14 -14 Z\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M20 60 h6 M94 60 h6\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M22 50 h76\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M56 44 h8 v6 h-8 Z\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M34 62 q26 12 52 0 v10 a12 12 0 0 1 -12 10 h-28 a12 12 0 0 1 -12 -10 Z\" fill=\"var(--accent)\" opacity=\".85\"/><circle cx=\"46\" cy=\"80\" r=\"2.2\" fill=\"var(--paper-2)\" opacity=\".7\"/><circle cx=\"54\" cy=\"84\" r=\"1.6\" fill=\"var(--paper-2)\" opacity=\".7\"/><circle cx=\"72\" cy=\"78\" r=\"1.8\" fill=\"var(--paper-2)\" opacity=\".7\"/><path d=\"M44 36 q6 -8 0 -14 M60 34 q7 -9 0 -16 M76 36 q6 -8 0 -14\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" opacity=\".5\"/></svg>"}, DATA={"1":{"n":1,"t":"Papillote de cabillaud, courgettes et tomates cerises","s":["ete"],"tot":30,"act":15,"star":false,"fam":"papillote","famL":"Papillote","ing":["4 dos de cabillaud (150-160 g pièce)","2 courgettes","200 g de tomates cerises","1 citron","basilic","4 c. à s. d'huile d'olive","1 kg de grenailles"],"steps":["Sors le poisson du frigo 15 min avant. Préchauffe le four à 200°C (chaleur tournante).","Lance les grenailles au Cookeo, panier vapeur, 10 min sous pression. Elles doivent se percer sans résistance à la pointe du couteau.","Coupe les courgettes en rondelles de 2-3 mm — à la mandoline si tu en as une. Plus épais, elles seront crues quand le poisson sera cuit. Coupe les tomates cerises en deux.","Découpe 4 feuilles de papier cuisson d'environ 35 cm. Sur chacune : un lit de courgettes (une demi-courgette par personne), 6-8 demi-tomates, puis le dos de cabillaud.","Sur chaque papillote : 1 c. à soupe d'huile d'olive, une rondelle fine de citron, du sel, du poivre. Referme en pliant les bords deux fois sur eux-mêmes : la vapeur doit rester enfermée.","Four 15 min sur une plaque — 18 min si les dos dépassent 3 cm d'épaisseur. Le papier gonfle : c'est le signe que ça cuit correctement.","Ouvre les papillotes à table, dans l'assiette. Basilic ciselé à ce moment-là, jamais avant."],"tip":"Si les papillotes ne gonflent pas, les bords sont mal fermés — la vapeur s'échappe et le poisson sèche.","photo":"https://images.pexels.com/photos/36040964/pexels-photo-36040964.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Courgettes, tomates cerises, basilic","nut":[465,35,14,47],"midi":"Sors les dos de cabillaud au frigo.","midiReq":true},"2":{"n":2,"t":"Papillote de saumon, fondue de poireaux et aneth","s":["hiver"],"tot":35,"act":15,"star":true,"fam":"papillote","famL":"Papillote","ing":["4 pavés de saumon (150 g pièce)","400 g de poireaux émincés surgelés (ou 3 frais)","1 citron","10 cl de lait","1 c. à s. de maïzena","aneth","300 g de quinoa"],"steps":["Préchauffe le four à 200°C. Le saumon doit être décongelé (la veille au frigo, ou 30 min en sac étanche dans l'eau froide).","Fais fondre les poireaux à la poêle 8 min avec une noix de beurre, feu moyen. Surgelés : à découvert, pour évaporer leur eau. Frais : émince-les d'abord en rondelles de 5 mm, rince-les bien, puis fais-les fondre à couvert avec 2 c. à soupe d'eau. Ils doivent être translucides, pas colorés.","Délaye 1 c. à soupe de maïzena dans 10 cl de lait froid, verse sur les poireaux, laisse épaissir 2 min en remuant. Sel, poivre.","Répartis les poireaux sur 4 feuilles de papier cuisson, pose un pavé de saumon dessus, une rondelle de citron, de l'aneth. Referme hermétiquement.","Four 14 min. Le saumon doit rester rosé au centre — au-delà de 16 min il devient sec et farineux.","Quinoa au Cookeo pendant ce temps : 300 g de quinoa rincé, 450 ml d'eau, 5 min sous pression, puis 5 min de repos."],"tip":"Le rinçage du quinoa n'est pas facultatif : sans lui, il garde une amertume nette.","photo":"https://images.pexels.com/photos/26763442/pexels-photo-26763442.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[660,43,28,51],"midi":"Sors les pavés de saumon au frigo.","midiReq":true},"3":{"n":3,"t":"Papillote de poulet, carottes, miel et thym","s":["automne","printemps","ete"],"tot":45,"act":20,"star":true,"fam":"papillote","famL":"Papillote","ing":["4 blancs de poulet","6 carottes","2 c. à s. de miel","2 c. à s. de sauce soja","thym, 1 gousse d'ail","300 g de riz basmati"],"steps":["Préchauffe le four à 200°C.","Mélange 2 c. à soupe de miel, 2 c. à soupe de sauce soja, 1 gousse d'ail écrasée et une bonne pincée de thym.","Coupe les carottes en rondelles de 2 mm — elles cuisent moins vite que le poulet, donc elles doivent être vraiment fines.","Entaille chaque blanc de poulet de 3 coups de couteau peu profonds : la marinade pénètre et la cuisson est plus régulière.","Monte les papillotes : carottes dessous, poulet dessus, le reste de la marinade versé par-dessus.","Four 22 min. Le poulet est cuit quand le jus qui sort d'une entaille est clair, sans trace rosée.","Riz basmati au Cookeo en parallèle : 300 g de riz, 450 ml d'eau, 8 min."],"tip":"Le miel peut brûler s'il touche le papier à nu — garde-le sur le poulet, pas sur les bords.","photo":"https://images.pexels.com/photos/29887688/pexels-photo-29887688.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[530,44,3,76],"midi":"Sors les blancs de poulet au frigo.","midiReq":true},"4":{"n":4,"t":"Salade de riz d'été au thon","s":["ete"],"tot":0,"act":20,"star":false,"fam":"salade","famL":"Salade complète","ing":["300 g de riz long","2 boîtes de thon","4 œufs durs","250 g de tomates cerises","1 poivron","1 boîte de maïs","8 cornichons","vinaigrette moutardée : 1 c. à c. de moutarde, 2 c. à s. de vinaigre de cidre, 4 c. à s. d'huile de colza"],"steps":["Cuis 300 g de riz long au Cookeo (8 min), puis rince-le à l'eau froide et égoutte-le très soigneusement. Un riz encore humide dilue la vinaigrette.","Œufs durs : 9 min à l'eau bouillante, puis eau glacée pour arrêter la cuisson et faciliter l'écalage.","Coupe les tomates cerises en deux, le poivron en petits dés de 5 mm, les cornichons en rondelles. Égoutte le maïs et le thon.","Prépare la vinaigrette moutardée : moutarde, vinaigre de cidre et sel fouettés ensemble, puis l'huile de colza en filet. Pas de balsamique ici : il colorerait le riz et son sucre se battrait avec le thon.","Mélange le riz, le thon émietté, le maïs, les tomates, le poivron, les cornichons et la vinaigrette. Ne mets pas les œufs.","Frigo, couvert. Compte 3 heures minimum pour que le riz prenne l'assaisonnement : de midi au soir, c'est parfait.","Au service : regoûte, rectifie sel et vinaigre (le riz froid absorbe énormément), puis ajoute les œufs en quartiers."],"tip":"Salée à midi, elle paraîtra fade le soir : le riz froid absorbe énormément. Prévois de rectifier au moment de servir, c'est normal.","photo":"https://images.pexels.com/photos/6978241/pexels-photo-6978241.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Tomates cerises, poivron","nut":[600,29,20,75],"midi":"Toute la salade se monte à midi : riz cuit, rincé, mélangé avec la vinaigrette, au frigo. Les œufs et la rectification, le soir.","midiReq":true},"5":{"n":5,"t":"Salade de riz d'hiver, betterave, maïs et œuf","s":["hiver"],"tot":0,"act":20,"star":false,"fam":"salade","famL":"Salade complète","ing":["300 g de riz long","2 betteraves cuites","4 œufs durs","1 boîte de maïs","150 g de jambon en dés","100 g d'emmental en dés","persil","vinaigrette à la noix : 2 c. à s. d'huile de noix, 2 c. à s. de colza, 1 c. à s. de vinaigre de cidre, 1 c. à c. de moutarde"],"steps":["Riz cuit, rincé à l'eau froide, bien égoutté.","Œufs durs 9 min, refroidis à l'eau glacée.","Coupe le jambon et l'emmental en dés de 1 cm, égoutte le maïs.","Mélange le riz, le maïs, le jambon, l'emmental et la vinaigrette à la noix. Frigo, couvert.","Coupe les betteraves en dés seulement au moment de servir, et pose-les sur le dessus sans mélanger — sinon tout le plat vire au rose en une heure.","Ajoute les œufs en quartiers et les herbes ciselées."],"tip":"Les betteraves sous vide rendent beaucoup de jus : éponge-les dans du papier absorbant avant de les couper.","photo":"https://images.pexels.com/photos/20868124/pexels-photo-20868124.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Betteraves cuites","nut":[685,30,27,78],"midi":"Toute la salade se monte à midi. Les betteraves et les œufs se posent le soir, au dernier moment.","midiReq":true},"6":{"n":6,"t":"Gratin de courgettes, pommes de terre et jambon","s":["ete"],"tot":70,"act":35,"star":false,"fam":"gratin","famL":"Gratin","ing":["1 kg de pommes de terre","3 courgettes","200 g de jambon (6 tranches)","50 cl de lait","30 g de maïzena (pour la béchamel légère)","80 g de gruyère","muscade"],"steps":["Préchauffe le four à 200°C.","Épluche et coupe 1 kg de pommes de terre en rondelles de 3-4 mm. Précuis-les 8 min au panier vapeur du Cookeo : c'est ce qui fait passer le gratin de 55 à 30 min de four.","Coupe les courgettes en rondelles et poêle-les 5 min à feu vif, sans couvercle, pour évacuer leur eau. Sale-les seulement à ce moment.","Béchamel légère : délaye 30 g de maïzena dans un peu de lait froid pris sur les 50 cl, verse le reste, chauffe en remuant jusqu'à épaississement (3-4 min). Elle doit napper la cuillère sans être compacte. Sel, poivre, muscade râpée.","Monte le gratin dans un plat beurré : pommes de terre, courgettes, jambon en lanières, un peu de béchamel — puis recommence. Termine par la béchamel, qui doit couvrir toute la surface.","80 g de gruyère râpé sur le dessus. Four 200°C, 30 min.","C'est prêt quand le dessus est doré et que ça bouillonne sur les bords. Laisse reposer 5 min avant de servir, sinon ça coule dans l'assiette."],"tip":"Si la béchamel épaissit trop vite, elle est passée à feu trop fort : rattrape-la avec un peu de lait froid et un coup de fouet.","photo":"https://images.pexels.com/photos/34985106/pexels-photo-34985106.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Courgettes","nut":[465,26,13,59],"midi":"","midiReq":false},"7":{"n":7,"t":"Gratin de poireaux, pommes de terre et jambon","s":["hiver"],"tot":80,"act":45,"star":false,"fam":"gratin","famL":"Gratin","ing":["1 kg de pommes de terre","4 poireaux (ou 400 g surgelés)","200 g de jambon blanc (6 tranches)","50 cl de lait","30 g de maïzena","1 c. à café de moutarde","80 g de gruyère râpé","muscade, sel, poivre"],"steps":["Émince 4 poireaux, rince-les bien, fais-les fondre 10 min à la poêle avec un peu d'eau, à couvert.","Égoutte-les fermement dans une passoire : les poireaux tiennent beaucoup d'eau et détrempent le gratin.","Précuis les pommes de terre en rondelles 8 min au panier vapeur.","Béchamel légère (50 cl de lait, 30 g de maïzena) additionnée d'1 c. à café de moutarde — c'est elle qui fait la différence avec la version courgettes.","Monte en couches : pommes de terre, poireaux, jambon, béchamel. Gruyère sur le dessus.","Four 200°C, 35 min, jusqu'à ce que le dessus soit bien doré."],"tip":"Sans l'égouttage des poireaux, tu auras 1 cm de liquide au fond du plat.","photo":"https://images.pexels.com/photos/32659125/pexels-photo-32659125.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Poireaux","nut":[460,26,11,62],"midi":"","midiReq":false},"8":{"n":8,"t":"Gratin dauphinois, poulet rôti et salade","s":["automne"],"tot":100,"act":25,"star":false,"fam":"gratin","famL":"Gratin","ing":["1,2 kg de pommes de terre à chair ferme","40 cl de lait + 10 cl de crème légère","1 gousse d'ail, muscade","6 cuisses de poulet","thym","salade verte"],"steps":["Préchauffe le four à 180°C (160°C en chaleur tournante).","Frotte un plat à gratin avec une gousse d'ail coupée en deux, puis beurre-le.","Coupe 1,2 kg de pommes de terre à chair ferme en rondelles de 2-3 mm. Ne les rince pas après la coupe : c'est l'amidon qui lie le gratin.","Chauffe 40 cl de lait et 10 cl de crème légère avec sel, poivre et muscade, sans faire bouillir. Verse chaud sur les pommes de terre rangées dans le plat : le liquide doit arriver à hauteur, pas les noyer.","Couvre d'une feuille d'aluminium et enfourne 45 min.","Dans un second plat : les 6 cuisses de poulet, huile d'olive, thym, sel, poivre, peau vers le haut. Enfourne-les en même temps, à découvert, pour 55 min.","Retire l'aluminium du gratin et poursuis 20 min pour qu'il dore. Il est cuit quand la pointe d'un couteau traverse sans aucune résistance.","Laisse reposer 10 min avant de servir. Salade assaisonnée au dernier moment."],"tip":"Un gratin dauphinois ne contient ni fromage ni œuf. Et il ne se presse pas : à 200°C il dore avant que les pommes de terre soient fondantes. C'est un plat de week-end, pas un plat de semaine.","photo":"https://images.pexels.com/photos/36865008/pexels-photo-36865008.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Salade verte","nut":[835,54,43,57],"midi":"Sors les cuisses de poulet au frigo.","midiReq":true},"9":{"n":9,"t":"Tarte courgettes, chèvre et menthe","s":["ete"],"tot":60,"act":20,"star":false,"fam":"tarte","famL":"Tarte salée","ing":["1 pâte brisée (moule de 28 cm)","2 courgettes","1 bûche de chèvre (150 g)","4 œufs","30 cl de lait (l'appareil)","muscade","menthe fraîche","salade verte"],"steps":["Préchauffe le four à 190°C.","Étale la pâte dans le moule, pique le fond à la fourchette, couvre de papier cuisson et de légumes secs, et précuis 10 min à blanc.","Coupe les courgettes en rondelles fines et poêle-les 6 min à l'huile d'olive, à feu vif. Elles doivent perdre leur eau et légèrement colorer.","Bats 4 œufs avec 30 cl de lait, sel, poivre, muscade.","Répartis les courgettes sur le fond précuit, pose des rondelles de chèvre de 1 cm, verse l'appareil.","Four 190°C, 30 min. Le centre doit être juste pris : il tremble encore légèrement quand tu bouges le moule.","Menthe ciselée à la sortie du four, et 10 min de repos avant de couper."],"tip":"Si tu sautes la précuisson à blanc, le fond restera mou sous les courgettes.","photo":"https://images.pexels.com/photos/34429582/pexels-photo-34429582.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Courgettes, chèvre frais, menthe, salade","nut":[545,21,36,32],"midi":"Sors la pâte brisée du congélateur.","midiReq":true},"10":{"n":10,"t":"Tarte aux poivrons rôtis, feta et thym","s":["ete"],"tot":65,"act":20,"star":false,"fam":"tarte","famL":"Tarte salée","ing":["1 pâte brisée (moule de 28 cm)","3 poivrons (rouge, jaune, orange)","150 g de feta","4 œufs","30 cl de lait (l'appareil)","thym","salade verte"],"steps":["Préchauffe le four à 200°C.","Coupe les poivrons en larges lanières, étale-les sur une plaque avec 2 c. à soupe d'huile d'olive et du sel. Four 20 min : ils doivent colorer sur les bords, c'est là que le sucre se développe.","Pendant ce temps, fonce le moule, pique le fond et précuis la pâte 10 min à blanc.","Bats 4 œufs avec 30 cl de lait, sel, poivre, thym.","Baisse le four à 190°C. Dispose les poivrons sur le fond de tarte, émiette la feta par-dessus, verse l'appareil.","Four 28 min, jusqu'à ce que le dessus soit pris et légèrement doré."],"tip":"Ne sale pas l'appareil comme d'habitude : la feta apporte déjà beaucoup de sel.","photo":"https://images.pexels.com/photos/29050583/pexels-photo-29050583.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Poivrons, feta, salade","nut":[540,20,35,33],"midi":"Sors la pâte brisée du congélateur.","midiReq":true},"11":{"n":11,"t":"Quiche poireaux-jambon","s":["hiver"],"tot":65,"act":25,"star":false,"fam":"tarte","famL":"Tarte salée","ing":["1 pâte brisée (moule de 28 cm)","4 poireaux","200 g de jambon (6 tranches)","4 œufs","30 cl de lait (l'appareil)","60 g de gruyère","muscade"],"steps":["Émince 4 poireaux, rince, fais fondre 12 min à couvert avec un peu d'eau et une noix de beurre.","Égoutte-les très soigneusement en pressant à la cuillère dans une passoire.","Fonce le moule, pique, précuis 10 min à blanc à 190°C.","Bats 4 œufs avec 30 cl de lait, sel, poivre, muscade.","Répartis les poireaux et le jambon en lanières, verse l'appareil, parsème 60 g de gruyère.","Four 190°C, 30 min. Le centre est pris mais reste souple.","10 min de repos avant de découper : une quiche coupée trop chaude s'effondre."],"tip":"L'eau des poireaux est le seul vrai risque de cette recette. Presse-les jusqu'à ce qu'il ne sorte plus rien.","photo":"https://images.pexels.com/photos/288264/pexels-photo-288264.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Poireaux","nut":[530,29,30,35],"midi":"Sors la pâte brisée du congélateur.","midiReq":true},"12":{"n":12,"t":"Quiche épinards-ricotta","s":["printemps"],"tot":55,"act":20,"star":false,"fam":"tarte","famL":"Tarte salée","ing":["1 pâte brisée (moule de 28 cm)","600 g d'épinards en branches surgelés","250 g de ricotta","4 œufs, 20 cl de lait","muscade, zeste de citron"],"steps":["Décongèle 600 g d'épinards — 6 min à la casserole à couvert et à feu doux suffisent — puis presse-les dans un torchon propre en tordant fort. Tu dois en extraire l'équivalent d'un grand verre d'eau.","Fonce le moule, pique, précuis 10 min à blanc à 190°C.","Mélange 250 g de ricotta, 4 œufs, 20 cl de lait, de la muscade, le zeste d'un demi-citron, sel et poivre.","Incorpore les épinards en les défaisant à la fourchette pour éviter les paquets.","Verse sur la pâte précuite, lisse la surface.","Four 190°C, 32 min. Le dessus doit être juste pris et à peine coloré."],"tip":"La ricotta rend elle aussi de l'eau : choisis-la égouttée, ou laisse-la 20 min dans une passoire.","photo":"https://images.pexels.com/photos/65173/pexels-photo-65173.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Ricotta","nut":[475,22,28,30],"midi":"Sors la pâte brisée du congélateur.","midiReq":true},"13":{"n":13,"t":"Poulet mariné citron-thym, haricots verts, riz","s":["ete"],"tot":40,"act":15,"star":true,"fam":"volaille","famL":"Volaille au four","ing":["4 blancs de poulet","marinade : jus de 2 citrons, 4 c. à s. d'huile d'olive, 2 gousses d'ail, thym","700 g de haricots verts","300 g de riz"],"steps":["À midi : mélange le jus de 2 citrons, 4 c. à soupe d'huile d'olive, 2 gousses d'ail écrasées, du thym, du sel et du poivre. Mets le poulet dedans, au frigo, dans un sac ou une boîte fermée.","Le soir, préchauffe le four à 200°C et sors le poulet du frigo 15 min avant.","Dispose le poulet dans un plat avec sa marinade, four 25 min.","Haricots verts au panier vapeur du Cookeo, 5 min. Passe-les sous l'eau froide 10 secondes s'ils doivent attendre : ils gardent leur couleur.","Riz au Cookeo ensuite, 8 min.","Verse le jus de cuisson sur le poulet au moment de servir — c'est là qu'est tout le goût."],"tip":"Quatre heures de marinade suffisent, donc un message à midi est largement assez. En dessous d'une heure, en revanche, ça ne sert à rien.","photo":"https://images.pexels.com/photos/10710969/pexels-photo-10710969.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[605,46,16,66],"midi":"Sors le poulet et mets-le à mariner tout de suite. Quatre heures suffisent : de midi au soir, c'est large.","midiReq":true},"14":{"n":14,"t":"Boulettes de bœuf au four, ratatouille, semoule","s":["ete","automne"],"tot":55,"act":35,"star":false,"fam":"boulettes","famL":"Boulettes","ing":["600 g de bœuf haché","1 œuf, 3 c. à s. de chapelure, 1 oignon râpé, persil, cumin","ratatouille : 1 aubergine, 2 courgettes, 1 poivron, 3 tomates, 1 oignon, ail, herbes de Provence","300 g de semoule"],"steps":["Préchauffe le four à 200°C.","Mélange 600 g de bœuf haché avec 1 œuf, 3 c. à soupe de chapelure, 1 oignon râpé, du persil, 1 c. à café de cumin, du sel et du poivre. Malaxe à la main 1 min, pas plus.","Forme des boulettes de la taille d'une grosse noix (environ 20). Mains humides : elles ne collent pas.","Plaque huilée, four 200°C, 18 min. Pas besoin de les retourner.","Ratatouille : coupe tous les légumes en dés de 1,5 cm. Fais revenir l'oignon 3 min, ajoute l'aubergine 5 min, puis la courgette et le poivron 5 min, enfin les tomates, l'ail et les herbes. 20 min à feu moyen, à découvert.","Semoule : verse un volume d'eau bouillante salée sur un volume de semoule, couvre 5 min, égraine à la fourchette avec un filet d'huile."],"tip":"L'aubergine boit énormément d'huile si tu l'ajoutes trop tôt. Commence toujours par l'oignon.","photo":"https://images.pexels.com/photos/34314421/pexels-photo-34314421.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Aubergine, courgettes, poivron, tomates","nut":[795,43,35,69],"midi":"Sors le bœuf haché au frigo.","midiReq":true},"15":{"n":15,"t":"Cuisses de poulet, courge et carottes rôties","s":["hiver"],"tot":65,"act":20,"star":true,"fam":"volaille","famL":"Volaille au four","ing":["6 cuisses ou hauts de cuisse","½ courge butternut, 4 carottes, 800 g de pommes de terre","thym, laurier, 1 oignon, paprika fumé"],"steps":["Préchauffe le four à 200°C.","Coupe la demi-courge, les carottes et les pommes de terre en cubes de 3 cm. Étale-les dans un grand plat avec l'oignon en quartiers.","Pose les cuisses de poulet dessus, peau vers le haut. Huile d'olive, thym, laurier, paprika fumé, sel, poivre. Verse 15 cl d'eau au fond du plat.","Four 45 min. Arrose une fois à mi-cuisson avec le jus du plat.","Le poulet est cuit quand la peau est croustillante et que le jus sort clair à l'os. Les légumes doivent être confits, pas fermes."],"tip":"Un plat trop petit fait cuire les légumes à la vapeur au lieu de les rôtir : ils doivent être en une seule couche.","photo":"https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[745,50,36,54],"midi":"Sors les cuisses de poulet au frigo.","midiReq":true},"16":{"n":16,"t":"Escalope de dinde panée au four, petits pois-carottes, riz","s":["printemps"],"tot":35,"act":20,"star":true,"fam":"poisson","famL":"Poisson au four","ing":["4 escalopes de dinde (150 g pièce)","1 œuf battu, 100 g de chapelure, un peu de farine","500 g de petits pois, 4 carottes","300 g de riz"],"steps":["Préchauffe le four à 200°C et mets une plaque à chauffer dedans.","Prépare trois assiettes : farine, œuf battu, chapelure. Sale et poivre la chapelure.","Passe chaque escalope dans la farine (en tapotant l'excédent), puis dans l'œuf, puis dans la chapelure en pressant bien.","Pose-les sur la plaque chaude huilée et arrose-les d'un filet d'huile sur le dessus — c'est ce qui remplace le bain de friture.","Four 20 min, en retournant à mi-cuisson. Elles doivent être dorées et croustillantes.","Petits pois et carottes au Cookeo, 5 min. Riz ensuite, 8 min."],"tip":"La plaque préchauffée est le détail qui évite un dessous mou.","photo":"https://images.pexels.com/photos/34636425/pexels-photo-34636425.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[745,53,12,99],"midi":"Sors les escalopes de dinde au frigo.","midiReq":true},"17":{"n":17,"t":"Pommes de terre farcies au four","s":["automne","hiver","printemps","ete"],"tot":75,"act":30,"star":true,"fam":"patate","famL":"Pomme de terre","ing":["8 grosses pommes de terre","200 g de jambon en dés (ou thon, ou reste de poulet)","2 poireaux surgelés (ou 1 courgette fraîche en été)","100 g de gruyère","10 cl de lait, muscade"],"steps":["Préchauffe le four à 200°C.","Lave 8 grosses pommes de terre sans les éplucher, précuis-les entières 15 min au panier vapeur.","Coupe un chapeau sur le dessus, évide à la petite cuillère en laissant 1 cm de paroi. Garde la chair.","Écrase la chair avec 10 cl de lait chaud, de la muscade, sel et poivre.","Poêle le légume choisi (poireaux surgelés, ou courgette fraîche en été) 5 min, mélange-le à la chair avec le jambon et la moitié du gruyère.","Remplis généreusement les pommes de terre, le reste de gruyère dessus.","Four 25 min, jusqu'à ce que le dessus soit gratiné."],"tip":"Si une paroi se perce, tapisse le fond d'une lanière de jambon : ça tient.","photo":"https://images.pexels.com/photos/7936634/pexels-photo-7936634.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[445,25,10,60],"midi":"","midiReq":false},"18":{"n":18,"t":"Cabillaud en croûte de moutarde, écrasé de pommes de terre","s":["ete","automne","hiver","printemps"],"tot":35,"act":20,"star":true,"fam":"poisson","famL":"Poisson au four","ing":["4 dos de cabillaud (150-160 g pièce)","2 c. à s. de moutarde, 60 g de chapelure, persil, zeste de citron","1 kg de pommes de terre","10 cl de lait, 1 noix de beurre","500 g d'épinards ou de haricots verts"],"steps":["Préchauffe le four à 200°C.","Le cabillaud doit être décongelé et séché. Mélange 60 g de chapelure, du persil ciselé et le zeste d'un citron.","Badigeonne chaque dos de cabillaud de moutarde sur le dessus, puis presse le mélange de chapelure dessus pour qu'il adhère.","Pose sur une plaque huilée, filet d'huile d'olive. Four 12 min : la chair doit s'ouvrir en lamelles sous la fourchette.","Pommes de terre au Cookeo 10 min, puis écrase-les grossièrement à la fourchette avec le lait chaud et une noix de beurre. Pas de mixeur : ça rend la purée élastique.","Épinards ou haricots verts au panier vapeur, 4 min."],"tip":"Douze minutes suffisent pour un dos de 3 cm. Au-delà, le cabillaud devient sec très vite.","photo":"https://images.pexels.com/photos/29578932/pexels-photo-29578932.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[490,40,10,56],"midi":"Sors les dos de cabillaud au frigo.","midiReq":true},"19":{"n":19,"t":"Hachis parmentier léger de bœuf et carottes","s":["automne","hiver","printemps"],"tot":60,"act":35,"star":true,"fam":"patate","famL":"Pomme de terre","ing":["600 g de bœuf haché","4 carottes","1 oignon","1 boîte de tomates concassées","1 kg de pommes de terre","15 cl de lait, muscade","60 g de gruyère","thym, laurier"],"steps":["Cuis 1 kg de pommes de terre au Cookeo, 15 min. Écrase-les avec 15 cl de lait chaud, de la muscade, sel et poivre. Pas de beurre : le gras viendra du gratinage.","Coupe l'oignon et 4 carottes en très petits dés. Fais-les revenir 8 min à l'huile, à feu moyen, jusqu'à ce que les carottes soient tendres.","Ajoute le bœuf haché, écrase-le à la cuillère et laisse-le colorer 4 min.","Verse la boîte de tomates concassées, thym, laurier, sel, poivre. Laisse réduire 12 min à découvert : le mélange doit être humide mais pas liquide.","Étale la viande au fond d'un plat, recouvre de purée, raye la surface à la fourchette (les stries donnent le croustillant), parsème 60 g de gruyère.","Four 200°C, 20 min, puis 3 min sous le gril si le dessus n'est pas assez doré."],"tip":"Une viande trop liquide fait flotter la purée. Réduis jusqu'à ce que la cuillère laisse une trace au fond de la poêle.","photo":"https://images.pexels.com/photos/36040894/pexels-photo-36040894.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[730,41,35,57],"midi":"Sors le bœuf haché au frigo. Et si tu as dix minutes, cuis les pommes de terre : le soir tombe à 40 min.","midiReq":true},"20":{"n":20,"t":"Gratin de riz, thon et brocolis","s":["hiver"],"tot":50,"act":15,"star":true,"fam":"gratin","famL":"Gratin","ing":["300 g de riz","2 boîtes de thon","500 g de brocolis surgelés","50 cl de lait","30 g de maïzena (pour la béchamel légère)","80 g de gruyère","muscade, citron"],"steps":["Préchauffe le four à 200°C.","Cuis 300 g de riz au Cookeo, 8 min. Brocolis surgelés au panier vapeur, 5 min.","Béchamel légère : 50 cl de lait, 30 g de maïzena, sel, poivre, muscade. Ajoute un trait de jus de citron en fin de cuisson — c'est lui qui réveille le thon.","Mélange dans le plat le riz, les 2 boîtes de thon égoutté et émietté, les brocolis et la béchamel.","80 g de gruyère sur le dessus. Four 25 min, jusqu'à coloration.","Laisse reposer 5 min : le gratin se tient mieux à la découpe."],"tip":"Ne mixe pas les brocolis avec le reste : garde-les en bouquets, sinon le plat devient uniforme et les filles décrochent.","photo":"https://images.pexels.com/photos/10255519/pexels-photo-10255519.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[520,32,10,74],"midi":"Facultatif : cuis le riz à midi et le plat tombe à 35 min le soir.","midiReq":false},"21":{"n":21,"t":"Papillote de cabillaud, carottes et cumin, boulgour","s":["printemps","ete","automne","hiver"],"tot":35,"act":15,"star":true,"fam":"papillote","famL":"Papillote","ing":["4 dos de cabillaud (150-160 g pièce)","6 carottes","1 c. à c. de cumin","1 citron","huile d'olive","300 g de boulgour","1/2 bouillon cube"],"steps":["Décongèle le cabillaud au frigo la veille — ou, si tu n'y as pas pensé, 30 min dans un sac étanche plongé dans l'eau froide. Jamais à température ambiante. Préchauffe le four à 200°C.","Coupe 6 carottes en rondelles de 2 mm, mélange-les avec 1 c. à café de cumin, 2 c. à soupe d'huile d'olive et du sel.","Répartis les carottes sur 4 feuilles de papier cuisson, pose le poisson dessus, une rondelle de citron sur chaque.","Referme hermétiquement. Four 16 min — deux minutes de plus qu'avec des courgettes, les carottes sont plus fermes.","Boulgour : un volume de boulgour pour un volume et demi d'eau bouillante avec un demi-bouillon cube, couvert 10 min hors du feu."],"tip":"Sèche le poisson décongelé au papier absorbant : l'eau de décongélation dilue tout le reste.","photo":"https://images.pexels.com/photos/36367576/pexels-photo-36367576.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[490,38,9,60],"midi":"Sors les dos de cabillaud au frigo.","midiReq":true},"22":{"n":22,"t":"Quiche thon-poireaux","s":["hiver"],"tot":60,"act":20,"star":true,"fam":"tarte","famL":"Tarte salée","ing":["1 pâte brisée (moule de 28 cm)","2 boîtes de thon","400 g de poireaux surgelés","4 œufs","30 cl de lait (l'appareil)","60 g de gruyère","moutarde, muscade"],"steps":["Préchauffe le four à 190°C.","Fais fondre 400 g de poireaux surgelés à la poêle 12 min, à découvert cette fois, pour évaporer l'eau de décongélation. Égoutte.","Fonce le moule, pique le fond, précuis 10 min à blanc.","Étale une fine couche de moutarde sur le fond précuit, puis les poireaux et le thon égoutté et émietté.","Bats 4 œufs avec 30 cl de lait, sel, poivre, muscade. Verse, parsème 60 g de gruyère.","Four 30 min. 10 min de repos avant de couper."],"tip":"Les poireaux surgelés contiennent plus d'eau que les frais : la cuisson à découvert n'est pas négociable ici.","photo":"https://images.pexels.com/photos/5419185/pexels-photo-5419185.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[505,32,27,32],"midi":"Sors la pâte brisée du congélateur.","midiReq":true},"23":{"n":23,"t":"Salade tiède de lentilles, œuf mollet et pommes de terre","s":["automne","printemps"],"tot":45,"act":20,"star":true,"fam":"salade","famL":"Salade complète","ing":["300 g de lentilles vertes","800 g de grenailles","4 œufs","2 carottes, 1 oignon","1 feuille de laurier, 1 clou de girofle","vinaigrette moutardée bien relevée (moutarde, vinaigre de cidre, huile de colza)","persil"],"steps":["Rince 300 g de lentilles vertes. Mets-les dans une casserole avec 2 carottes en dés, un oignon piqué d'un clou de girofle et une feuille de laurier. Couvre de 3 fois leur volume d'eau froide.","Porte à ébullition puis baisse : 20 min à frémissement. Sale seulement en fin de cuisson, sinon la peau durcit.","Grenailles au panier vapeur 10 min, coupées en deux.","Œufs mollets : plonge-les dans l'eau bouillante, 6 min précises, puis eau glacée immédiatement. Écale-les sous un filet d'eau.","Prépare une vinaigrette bien relevée : 1 c. à café bombée de moutarde, 2 c. à soupe de vinaigre de cidre, 4 c. à soupe d'huile, échalote ciselée si tu en as.","Mélange les lentilles égouttées et les pommes de terre encore tièdes avec la vinaigrette : c'est tiède qu'elles absorbent l'assaisonnement.","Sers avec l'œuf ouvert en deux sur le dessus et beaucoup d'herbes."],"tip":"Six minutes pour l'œuf mollet, montre en main. Sept, et le jaune est pris.","photo":"https://images.pexels.com/photos/8934919/pexels-photo-8934919.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[625,30,19,75],"midi":"Facultatif : cuis les lentilles à midi et le soir tombe à 25 min.","midiReq":false},"24":{"n":24,"t":"Riz au four au poulet et petits pois","s":["ete","automne","hiver","printemps"],"tot":55,"act":20,"star":true,"fam":"volaille","famL":"Volaille au four","ing":["300 g de riz long","4 blancs de poulet en morceaux","500 g de petits pois surgelés","1 oignon, 2 carottes","70 cl de bouillon","paprika fumé, thym"],"steps":["Préchauffe le four à 190°C.","Coupe le poulet en morceaux de 3 cm. Fais-les colorer 5 min à feu vif dans une cocotte ou un plat allant au four.","Ajoute l'oignon émincé et 2 carottes en petits dés, 3 min de plus.","Verse les 300 g de riz à sec, remue 1 min pour qu'il s'enrobe de gras, ajoute le paprika fumé et le thym.","Verse 70 cl de bouillon chaud (c'est la proportion qui compte : un peu plus de 2 volumes de liquide pour 1 de riz), ajoute les petits pois encore congelés.","Couvre et enfourne 30 min sans jamais ouvrir.","Sors, laisse reposer 5 min à couvert, puis égraine à la fourchette."],"tip":"Le bouillon doit être chaud au moment où tu le verses, sinon la cuisson repart de zéro et le riz devient collant.","photo":"https://images.pexels.com/photos/21821579/pexels-photo-21821579.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[620,50,10,77],"midi":"Sors les blancs de poulet au frigo.","midiReq":true},"25":{"n":25,"t":"Gratin de courge, pommes de terre et jambon","s":["hiver"],"tot":75,"act":35,"star":true,"fam":"gratin","famL":"Gratin","ing":["½ courge butternut","900 g de pommes de terre","200 g de jambon (6 tranches)","50 cl de lait","30 g de maïzena (pour la béchamel légère)","80 g de gruyère","sauge ou thym, muscade"],"steps":["Préchauffe le four à 200°C.","Épluche la demi-courge, retire les graines, coupe-la en tranches de 5 mm. Même épaisseur pour les pommes de terre.","Précuis les deux ensemble 8 min au panier vapeur.","Béchamel légère (50 cl de lait, 30 g de maïzena), bien assaisonnée en muscade.","Monte en alternant courge, pommes de terre, jambon en lanières et béchamel.","Gruyère et quelques feuilles de sauge sur le dessus. Four 30 min."],"tip":"La courge rend du sucre en cuisant et colore vite : couvre d'un papier alu si le dessus fonce avant la fin.","photo":"https://images.pexels.com/photos/6129281/pexels-photo-6129281.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[450,25,10,63],"midi":"","midiReq":false},"26":{"n":26,"t":"Rösti au four, œufs et salade","s":["automne","hiver"],"tot":55,"act":25,"star":false,"fam":"oeufs","famL":"Œufs","ing":["1 kg de pommes de terre","1 oignon","6 œufs","100 g de jambon ou de lardons","60 g de gruyère","salade verte"],"steps":["Préchauffe le four à 220°C.","Râpe 1 kg de pommes de terre crues à la grosse grille, ainsi que l'oignon.","Mets le tout dans un torchon propre et tords fermement au-dessus de l'évier. C'est l'étape qui décide de tout : il doit sortir beaucoup d'eau.","Mélange avec le jambon en dés, sel et poivre. Étale sur une plaque huilée, 2 cm d'épaisseur, en tassant à la spatule.","Four 30 min, jusqu'à ce que les bords soient dorés et croustillants. En dessous, le dessous reste pâle et mou.","Parsème 60 g de gruyère, creuse 6 puits à la cuillère, casse un œuf dans chacun.","Remets 6 min : le blanc doit être pris et le jaune encore coulant. Salade à côté."],"tip":"Les pommes de terre râpées noircissent en quelques minutes : râpe-les au dernier moment, juste avant d'essorer.","photo":"https://images.pexels.com/photos/15382836/pexels-photo-15382836.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Salade verte","nut":[475,25,20,46],"midi":"","midiReq":false},"27":{"n":27,"t":"Boulettes au four, sauce tomate, semoule","s":["ete","automne","hiver","printemps"],"tot":35,"act":20,"star":true,"fam":"boulettes","famL":"Boulettes","ing":["600 g de bœuf haché","1 œuf, 3 c. à s. de chapelure, 1 oignon râpé, cumin","1 boîte de tomates concassées, ail, herbes de Provence","500 g de haricots verts surgelés","300 g de semoule"],"steps":["Préchauffe le four à 200°C.","Mélange le haché avec l'œuf, la chapelure, l'oignon râpé, le cumin, sel et poivre. Forme une vingtaine de boulettes.","Plaque huilée, four 18 min (22 min si tu les as sorties du congélateur formées et crues, sans les décongeler).","Sauce : fais revenir 2 gousses d'ail 30 secondes, verse la boîte de tomates concassées, herbes de Provence, une pincée de sucre pour couper l'acidité, sel. 12 min à feu moyen.","Haricots verts surgelés au panier vapeur, 5 min. Semoule : volume d'eau bouillante égal, couvert 5 min.","Roule les boulettes dans la sauce chaude juste avant de servir, pour qu'elles restent dorées."],"tip":"La pincée de sucre n'est pas un détail : les tomates en boîte sont acides et les enfants le sentent tout de suite.","photo":"https://images.pexels.com/photos/5419342/pexels-photo-5419342.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[770,44,32,70],"midi":"Sors le bœuf haché au frigo — ou les boulettes déjà formées, qui cuisent congelées.","midiReq":true},"28":{"n":28,"t":"Œufs cocotte aux épinards, pommes de terre sautées","s":["ete","automne","hiver","printemps"],"tot":40,"act":25,"star":true,"fam":"oeufs","famL":"Œufs","ing":["8 œufs","600 g d'épinards surgelés","1 kg de pommes de terre","10 cl de lait","60 g de gruyère","muscade, ail"],"steps":["Préchauffe le four à 190°C.","Coupe les pommes de terre en dés de 1,5 cm, précuis-les 8 min au panier vapeur, puis fais-les sauter 8 min à la poêle avec de l'ail jusqu'à ce qu'elles dorent.","Décongèle les épinards à la casserole à couvert (6 min à feu doux), presse-les fort, réchauffe-les 3 min avec 10 cl de lait, de la muscade, sel et poivre.","Répartis les épinards dans 4 ramequins beurrés, creuse un puits, casse 2 œufs dans chacun.","Parsème de gruyère, sel et poivre sur le blanc uniquement.","Four 12 min. Le blanc est pris, le jaune encore coulant. À 15 min, le jaune est dur."],"tip":"Pose les ramequins dans un plat rempli d'eau chaude à mi-hauteur si tu veux une cuisson plus douce et plus régulière.","photo":"https://images.pexels.com/photos/25749303/pexels-photo-25749303.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[540,28,25,46],"midi":"","midiReq":false},"29":{"n":29,"t":"Soupe-repas de lentilles corail, carottes et jambon","s":["hiver"],"tot":35,"act":20,"star":true,"fam":"soupe","famL":"Soupe-repas","ing":["300 g de lentilles corail","4 carottes","1 oignon","200 g de jambon en dés","1,2 litre de bouillon","cumin, laurier","pain + gruyère pour les tartines"],"steps":["Coupe l'oignon et 4 carottes en petits dés. Fais-les revenir 5 min à l'huile dans une grande casserole.","Ajoute 300 g de lentilles corail rincées, 1,2 litre de bouillon chaud, 1 c. à café de cumin, une feuille de laurier.","15 min à frémissement : les lentilles corail se défont d'elles-mêmes, il n'y a rien à surveiller.","Retire le laurier. Mixe rapidement au plongeur pour une texture veloutée, ou laisse tel quel si les filles préfèrent voir les morceaux.","Ajoute le jambon en dés hors du feu — il ne doit pas bouillir.","Tartines : tranches de pain, gruyère râpé, 3 min sous le gril, en surveillant."],"tip":"Si la soupe est trop épaisse en refroidissant, rallonge-la simplement avec de l'eau chaude et rectifie le sel.","photo":"https://images.pexels.com/photos/19063283/pexels-photo-19063283.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[570,37,12,73],"midi":"","midiReq":false},"30":{"n":30,"t":"Papillote de saumon, petits pois et carottes, riz","s":["ete","automne","hiver","printemps"],"tot":30,"act":15,"star":true,"fam":"papillote","famL":"Papillote","ing":["4 pavés de saumon (150 g pièce)","300 g de petits pois surgelés","4 carottes","1 citron","aneth ou ciboulette","300 g de riz"],"steps":["Préchauffe le four à 200°C. Le saumon doit être décongelé et séché au papier absorbant.","Coupe 4 carottes en rondelles de 2 mm.","Sur chaque feuille : les carottes, puis les petits pois encore congelés répartis dessus (ils rendront juste ce qu'il faut d'humidité).","Pose le pavé de saumon, une rondelle de citron, un filet d'huile d'olive, sel et poivre. Referme hermétiquement.","Four 16 min. Le saumon reste rosé au cœur.","Riz au Cookeo en parallèle, 8 min. Herbes ciselées à l'ouverture."],"tip":"Les petits pois congelés directement dans la papillote évitent l'étape de décongélation sans rien changer au résultat.","photo":"https://images.pexels.com/photos/27672770/pexels-photo-27672770.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[715,40,27,74],"midi":"Sors les pavés de saumon au frigo.","midiReq":true},"31":{"n":31,"t":"Poêlée de gnocchis, épinards et jambon","s":["ete","automne","hiver","printemps"],"tot":25,"act":20,"star":true,"fam":"poele","famL":"Poêlée minute","ing":["800 g de gnocchis frais","400 g d'épinards en branches surgelés","200 g de jambon (6 tranches)","20 cl de crème légère","60 g de gruyère","1 gousse d'ail, muscade"],"steps":["Décongèle les épinards à la casserole, à couvert, 6 min à feu doux. Presse-les fort dans une passoire : il doit sortir l'équivalent d'un verre d'eau.","Pendant ce temps, coupe le jambon en lanières et écrase la gousse d'ail.","Poêle les gnocchis directement dans une grande poêle avec un filet d'huile, 8 min à feu moyen-vif. Remue toutes les deux minutes seulement : c'est en restant en contact avec le fond qu'ils dorent et gonflent.","Ajoute l'ail 30 secondes, puis les épinards pressés, le jambon et la crème. 4 min à feu moyen. Muscade, poivre, très peu de sel — le jambon et le gruyère en apportent déjà.","Hors du feu, le gruyère râpé, mélange et sers immédiatement : les gnocchis durcissent en refroidissant."],"tip":"Ne fais jamais bouillir les gnocchis avant de les poêler. Gorgés d'eau, ils s'écrasent dans la poêle au lieu de croûter.","photo":"https://images.pexels.com/photos/7213095/pexels-photo-7213095.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[560,26,20,67],"midi":"","midiReq":false},"32":{"n":32,"t":"Wok de poulet, légumes croquants et nouilles","s":["ete","automne","hiver","printemps"],"tot":30,"act":20,"star":true,"fam":"poele","famL":"Poêlée minute","ing":["4 blancs de poulet","600 g de poêlée de légumes asiatiques surgelée","300 g de nouilles chinoises","4 c. à s. de sauce soja, 1 c. à s. de miel","2 gousses d'ail, 1 c. à c. de gingembre","2 c. à s. d'huile"],"steps":["Coupe les blancs de poulet en lanières d'un centimètre — c'est la seule découpe de la recette.","Mélange la sauce soja, le miel, l'ail écrasé et le gingembre dans un bol.","Fais chauffer une grande poêle ou un wok jusqu'à ce que l'huile fume légèrement. Saisis le poulet 5 min sans y toucher les deux premières minutes : il doit colorer, pas rendre son eau. Réserve dans une assiette.","Dans la même poêle, les légumes encore congelés, 6 min à feu vif à découvert. L'eau doit s'évaporer, sinon tout devient mou.","Nouilles chinoises pendant ce temps : 4 min dans l'eau bouillante, égouttées et rincées à l'eau froide pour qu'elles ne collent pas.","Remets le poulet, verse la sauce, ajoute les nouilles. 2 min à feu vif en mélangeant, et à table."],"tip":"Une poêle tiède fait bouillir la viande au lieu de la saisir. Si ta poêle est petite, fais le poulet en deux fois — entassé, il rend son jus et devient gris.","photo":"https://images.pexels.com/photos/24243345/pexels-photo-24243345.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[585,50,10,66],"midi":"Sors les blancs de poulet au frigo.","midiReq":true},"33":{"n":33,"t":"Riz sauté aux petits pois, carottes et œufs","s":["ete","automne","hiver","printemps"],"tot":30,"act":20,"star":true,"fam":"poele","famL":"Poêlée minute","veg":false,"ing":["300 g de riz long (idéalement cuit la veille)","300 g de petits pois surgelés","3 carottes","1 oignon","6 œufs","3 c. à s. de sauce soja","ciboulette"],"steps":["Si le riz n'est pas déjà cuit : Cookeo 8 min, puis étale-le sur une plaque pour qu'il refroidisse et sèche pendant que tu prépares le reste.","Coupe les carottes et l'oignon en petits dés.","Bats les 6 œufs. Fais-les prendre en omelette 2 min dans la poêle huilée, découpe-les grossièrement à la spatule et réserve.","Même poêle, feu vif : carottes et oignon 5 min, puis les petits pois encore congelés 3 min.","Ajoute le riz et remue 3 min pour le détacher et le réchauffer, puis la sauce soja versée sur les bords de la poêle, pas au centre.","Remets l'œuf, ciboulette ciselée, et sers tout de suite."],"tip":"Le riz de la veille est meilleur ici : froid et sec, il saute. Un riz chaud et humide colle en bouillie — c'est la seule recette du répertoire qui gagne à partir d'un reste.","photo":"https://images.pexels.com/photos/32845321/pexels-photo-32845321.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[540,21,16,74],"midi":"Cuis le riz à midi et étale-le sur une plaque pour qu'il refroidisse. C'est ce qui fait toute la différence entre un riz sauté et une bouillie.","midiReq":true},"34":{"n":34,"t":"Dahl de lentilles corail au lait de coco","s":["automne","hiver","printemps"],"tot":30,"act":15,"star":true,"fam":"mijote","famL":"Mijoté express","veg":true,"ing":["300 g de lentilles corail","40 cl de lait de coco","1 boîte de tomates concassées","50 cl de bouillon de légumes","1 oignon, 2 gousses d'ail, 1 c. à c. de gingembre","1 c. à s. de curry, 1 c. à c. de curcuma, 1 c. à c. de cumin","300 g de riz basmati","coriandre ou persil, 1 citron"],"steps":["Émince l'oignon, écrase l'ail.","Fais revenir l'oignon 5 min à l'huile dans une grande casserole. Ajoute l'ail, le gingembre et les épices, et remue 1 min : les épices doivent chauffer dans le gras, c'est là qu'elles s'ouvrent.","Verse les lentilles corail rincées, la boîte de tomates, le lait de coco et le bouillon.","15 min à frémissement, à découvert, en remuant de temps en temps pour que rien n'attache. Les lentilles corail se défont seules et épaississent le plat : il n'y a rien à surveiller de près.","Riz basmati au Cookeo en parallèle : 300 g, 450 ml d'eau, 8 min.","Sale seulement en fin de cuisson. Herbes ciselées et un trait de jus de citron dans chaque assiette — sans l'acidité, le plat reste plat."],"tip":"Une minute d'épices dans l'huile chaude change tout. Jetées directement dans le liquide, elles gardent un goût de poudre crue.","photo":"https://images.pexels.com/photos/30203314/pexels-photo-30203314.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[795,28,28,106],"midi":"","midiReq":false},"35":{"n":35,"t":"Curry de pois chiches, épinards et tomates","s":["ete","automne","hiver","printemps"],"tot":30,"act":15,"star":true,"fam":"mijote","famL":"Mijoté express","veg":true,"ing":["3 boîtes de pois chiches (720 g égouttés)","400 g d'épinards en branches surgelés","1 boîte de tomates concassées","20 cl de lait de coco","1 oignon, 2 gousses d'ail","1 c. à s. de curry, 1 c. à c. de cumin, 1 c. à c. de paprika fumé","300 g de riz","1 citron"],"steps":["Émince l'oignon et écrase l'ail. Fais-les revenir 5 min, puis ajoute les épices et remue 1 min.","Verse la boîte de tomates et le lait de coco, laisse réduire 5 min à feu moyen.","Égoutte et rince les pois chiches, ajoute-les. 10 min à feu moyen : c'est le temps qu'il leur faut pour s'imprégner. En dessous, ils restent fades au milieu.","Ajoute les épinards encore congelés, couvre 5 min, puis mélange : ils rendent l'eau qu'il faut pour détendre la sauce.","Riz au Cookeo en parallèle, 8 min.","Sel, poivre, et le jus d'un demi-citron hors du feu."],"tip":"Rince vraiment les pois chiches en boîte sous l'eau froide. L'eau de conserve a un goût métallique qui traverse toute la sauce.","photo":"https://images.pexels.com/photos/9287035/pexels-photo-9287035.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[690,23,21,96],"midi":"","midiReq":false},"36":{"n":36,"t":"Poulet mijoté aux carottes, citron et olives","s":["ete","automne","hiver","printemps"],"tot":35,"act":20,"star":true,"fam":"mijote","famL":"Mijoté express","ing":["4 blancs de poulet","6 carottes","1 oignon, 2 gousses d'ail","100 g d'olives vertes ou noires","1 citron (zeste et jus)","1 c. à c. de cumin, 1 c. à c. de paprika fumé, thym","40 cl de bouillon","300 g de semoule"],"steps":["Coupe le poulet en gros morceaux de 4 cm, les carottes en rondelles épaisses de 5 mm, émince l'oignon.","Fais colorer le poulet 5 min à feu vif dans une cocotte, sans le remuer les deux premières minutes. Réserve-le dans une assiette.","Même cocotte : l'oignon 3 min, puis l'ail et les épices 1 min.","Remets le poulet, ajoute les carottes, le bouillon chaud et le zeste du citron. Couvre et laisse 18 min à feu moyen — les carottes doivent être tendres sans se défaire.","Semoule pendant ce temps : un volume d'eau bouillante salée sur un volume de semoule, couvert 5 min, puis égrainée à la fourchette avec un filet d'huile.","Ajoute les olives et le jus du citron 2 minutes avant la fin seulement. Goûte avant de saler : les olives ont déjà tout apporté."],"tip":"Les olives se mettent à la toute fin. Vingt minutes dans la sauce, elles deviennent amères et écrasent le citron.","photo":"https://images.pexels.com/photos/2287524/pexels-photo-2287524.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"","nut":[615,48,15,66],"midi":"Sors les blancs de poulet au frigo.","midiReq":true},"37":{"n":37,"t":"Pâtes au thon, citron et courgettes","s":["ete"],"tot":25,"act":20,"star":false,"fam":"pates","famL":"Pâtes","ing":["500 g de spaghettis ou linguine","2 boîtes de thon","2 courgettes","1 citron (zeste et jus)","2 gousses d'ail","6 c. à s. d'huile d'olive","60 g de parmesan","basilic ou persil"],"steps":["Mets une grande casserole d'eau salée à bouillir. Compte 8 min rien que pour l'ébullition : c'est elle qui commande tout le reste, lance-la en premier.","Coupe les courgettes en rondelles fines. Poêle-les 6 min à feu vif dans l'huile d'olive avec l'ail écrasé : elles doivent dorer sur les bords, pas fondre.","Cuis les pâtes le temps indiqué sur le paquet moins une minute. Prélève une louche d'eau de cuisson avant d'égoutter.","Hors du feu, mélange les pâtes avec les courgettes, le thon égoutté et émietté, le zeste et le jus du citron, et un peu d'eau de cuisson.","Parmesan et herbes au dernier moment, dans le plat de service."],"tip":"L'eau de cuisson n'est pas facultative : c'est son amidon qui lie l'huile et le citron. Sans elle, les pâtes restent sèches et l'assaisonnement tombe au fond.","photo":"https://images.pexels.com/photos/34429587/pexels-photo-34429587.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Courgettes","nut":[755,35,25,92],"midi":"","midiReq":false},"38":{"n":38,"t":"One-pot pasta aux tomates cerises, basilic et olives","s":["ete"],"tot":25,"act":20,"star":false,"fam":"pates","famL":"Pâtes","veg":true,"ing":["500 g de linguine","2 boîtes de pois chiches (480 g égouttés)","500 g de tomates cerises","100 g d'olives noires","1 oignon, 3 gousses d'ail","1 litre d'eau bouillante","6 c. à s. d'huile d'olive","basilic frais"],"steps":["Coupe les tomates cerises en deux, émince l'oignon et l'ail.","Mets tout dans une grande sauteuse : les pâtes crues, les pois chiches égouttés et rincés, les tomates, l'oignon, l'ail, les olives, l'huile d'olive, le litre d'eau bouillante et du sel. Les pâtes doivent être juste couvertes.","Porte à ébullition et compte 11 à 12 min à feu vif, en remuant toutes les deux minutes pour décoller les pâtes du fond.","À la fin, le liquide doit avoir presque disparu et former une sauce qui nappe. S'il en reste trop, poursuis 2 min à découvert ; s'il n'en reste plus, ajoute un fond d'eau chaude.","Hors du feu : beaucoup de basilic déchiré à la main et un filet d'huile d'olive crue."],"tip":"Remuer toutes les deux minutes n'est pas une précaution : l'amidon des pâtes crues attache au fond en un rien de temps, et le goût de brûlé ne se rattrape pas.","photo":"https://images.pexels.com/photos/12622979/pexels-photo-12622979.jpeg?auto=compress&cs=tinysrgb&w=1200","frais":"Tomates cerises, basilic","nut":[840,26,28,114],"midi":"","midiReq":false}}, PANTRY=[{"c":"congelateur","n":"Dos de cabillaud","q":"8 pièces","s":["ete","automne","hiver","printemps"],"u":"Papillotes, croûte de moutarde"},{"c":"congelateur","n":"Pavés de saumon","q":"8 pièces","s":["ete","automne","hiver","printemps"],"u":"Papillotes poireaux ou petits pois"},{"c":"congelateur","n":"Blancs de poulet","q":"8 pièces","s":["ete","automne","hiver","printemps"],"u":"Papillotes, riz au four, marinades"},{"c":"congelateur","n":"Hauts de cuisse de poulet","q":"6 pièces","s":["automne","hiver"],"u":"Plaque au four, dauphinois"},{"c":"congelateur","n":"Bœuf haché","q":"2 × 600 g","s":["ete","automne","hiver","printemps"],"u":"Boulettes, hachis parmentier"},{"c":"congelateur","n":"Escalopes de dinde","q":"4 pièces","s":["printemps"],"u":"Panées au four"},{"c":"congelateur","n":"Petits pois","q":"2 × 750 g","s":["printemps","ete","hiver","automne"],"u":"Papillotes, riz au four, escalopes"},{"c":"congelateur","n":"Haricots verts","q":"2 × 750 g","s":["ete","automne","hiver","printemps"],"u":"Poulet mariné, boulettes, poisson"},{"c":"congelateur","n":"Épinards en branches","q":"2 × 750 g","s":["ete","automne","hiver","printemps"],"u":"Quiche, œufs cocotte, poisson"},{"c":"congelateur","n":"Brocolis","q":"1 × 750 g","s":["hiver"],"u":"Gratin de riz au thon"},{"c":"congelateur","n":"Poireaux émincés","q":"2 × 450 g","s":["ete","automne","hiver","printemps"],"u":"Quiches, papillote de saumon, gratins"},{"c":"congelateur","n":"Ratatouille cuisinée","q":"1 sachet","s":["ete","automne"],"u":"Dépannage avec les boulettes"},{"c":"congelateur","n":"Pâtes brisées","q":"3 rouleaux","s":["ete","automne","hiver","printemps"],"u":"Toutes les tartes et quiches"},{"c":"congelateur","n":"Pain de campagne tranché","q":"1 sachet","s":["hiver"],"u":"Tartines gratinées de la soupe"},{"c":"congelateur","n":"Herbes (persil, aneth, ciboulette)","q":"3 sachets","s":["ete","automne","hiver","printemps"],"u":"Finitions"},{"c":"congelateur","n":"Boulettes crues maison","q":"1 sachet","s":["ete","automne","hiver","printemps"],"u":"Cuisent congelées, 22 min au four"},{"c":"placard","n":"Riz basmati","q":"1 kg","s":["ete","automne","hiver","printemps"],"u":"Papillotes de poulet, poisson"},{"c":"placard","n":"Riz long","q":"1 kg","s":["ete","automne","hiver","printemps"],"u":"Salades de riz, gratin de riz, riz au four"},{"c":"placard","n":"Semoule","q":"500 g","s":["ete","automne","hiver","printemps"],"u":"Boulettes"},{"c":"placard","n":"Boulgour","q":"500 g","s":["ete","automne","hiver","printemps"],"u":"Papillote cabillaud-cumin"},{"c":"placard","n":"Quinoa","q":"500 g","s":["hiver"],"u":"Papillote de saumon"},{"c":"placard","n":"Lentilles vertes","q":"500 g","s":["automne","printemps"],"u":"Salade tiède"},{"c":"placard","n":"Lentilles corail","q":"500 g","s":["hiver"],"u":"Soupe-repas"},{"c":"placard","n":"Chapelure","q":"500 g","s":["ete","automne","hiver","printemps"],"u":"Boulettes, panure, croûte de moutarde"},{"c":"placard","n":"Maïzena","q":"250 g","s":["ete","automne","hiver","printemps"],"u":"Béchamel légère de tous les gratins"},{"c":"placard","n":"Farine","q":"1 kg","s":["ete","automne","hiver","printemps"],"u":"Panure"},{"c":"placard","n":"Thon au naturel","q":"6 boîtes","s":["ete","automne","hiver","printemps"],"u":"Salades de riz, gratin, quiche"},{"c":"placard","n":"Maïs","q":"3 boîtes","s":["ete","automne","hiver","printemps"],"u":"Salades de riz"},{"c":"placard","n":"Tomates concassées","q":"4 boîtes","s":["ete","automne","hiver","printemps"],"u":"Boulettes, hachis parmentier"},{"c":"placard","n":"Cornichons","q":"1 bocal","s":["ete"],"u":"Salade de riz d'été"},{"c":"placard","n":"Huile d'olive","q":"1 L","s":["ete","automne","hiver","printemps"],"u":"Base"},{"c":"placard","n":"Vinaigre de cidre","q":"1 bouteille","s":["ete","automne","hiver","printemps"],"u":"Vinaigrettes"},{"c":"placard","n":"Moutarde","q":"1 pot","s":["ete","automne","hiver","printemps"],"u":"Vinaigrettes, croûte de poisson, quiches"},{"c":"placard","n":"Sauce soja","q":"1 bouteille","s":["automne","printemps","ete"],"u":"Marinade miel-soja"},{"c":"placard","n":"Miel","q":"1 pot","s":["automne","printemps","ete"],"u":"Marinade des carottes"},{"c":"placard","n":"Bouillon cube","q":"1 boîte","s":["ete","automne","hiver","printemps"],"u":"Boulgour, riz au four, soupe"},{"c":"placard","n":"Épices : thym, laurier, muscade, paprika fumé, cumin, girofle, curry, curcuma, gingembre, herbes de Provence","q":"—","s":["ete","automne","hiver","printemps"],"u":"Toutes les recettes"},{"c":"bac","n":"Pommes de terre","q":"5 kg","s":["ete","automne","hiver","printemps"],"u":"Présentes dans la moitié des plats"},{"c":"bac","n":"Oignons","q":"1 kg","s":["ete","automne","hiver","printemps"],"u":"Base"},{"c":"bac","n":"Ail","q":"2 têtes","s":["ete","automne","hiver","printemps"],"u":"Base"},{"c":"bac","n":"Carottes","q":"2 kg","s":["ete","automne","hiver","printemps"],"u":"Papillotes, lentilles, plaques au four"},{"c":"bac","n":"Citrons","q":"4 pièces","s":["ete","automne","hiver","printemps"],"u":"Poisson, marinades"},{"c":"bac","n":"Courge butternut","q":"1 entière","s":["automne","hiver"],"u":"Gratin de courge, plaque de poulet — se garde 3 mois"},{"c":"frigo","n":"Œufs","q":"12 minimum","s":["ete","automne","hiver","printemps"],"u":"Quiches, œufs cocotte, salades, panure"},{"c":"frigo","n":"Lait","q":"2 litres","s":["ete","automne","hiver","printemps"],"u":"Béchamel, quiches, purées"},{"c":"frigo","n":"Beurre","q":"250 g","s":["ete","automne","hiver","printemps"],"u":"Papillotes, écrasés"},{"c":"frigo","n":"Gruyère râpé","q":"400 g","s":["ete","automne","hiver","printemps"],"u":"Tous les gratins et quiches"},{"c":"frigo","n":"Jambon blanc sous vide","q":"1 paquet","s":["ete","automne","hiver","printemps"],"u":"Gratins, quiches, pommes de terre farcies"},{"c":"frigo","n":"Crème légère","q":"1 briquette","s":["automne"],"u":"Gratin dauphinois"},{"c":"placard","n":"Huile de colza","q":"1 L","s":["ete","automne","hiver","printemps"],"u":"Base de la vinaigrette maison"},{"c":"placard","n":"Huile de noix","q":"1 bouteille","s":["automne","hiver","printemps"],"u":"Lentilles, betteraves, salades d'hiver"},{"c":"placard","n":"Vinaigre balsamique","q":"1 bouteille","s":["ete","automne","hiver","printemps"],"u":"Vinaigrette maison, salades vertes"},{"c":"placard","n":"Arôme Maggi","q":"1 flacon","s":["ete","automne","hiver","printemps"],"u":"Vinaigrette maison — apporte le sel, ne pas resaler"},{"c":"placard","n":"Spaghettis et linguine","q":"1,5 kg","u":"Pâtes au thon, one-pot pasta","s":["ete","automne","hiver","printemps"]},{"c":"placard","n":"Nouilles chinoises","q":"500 g","u":"Wok de poulet","s":["ete","automne","hiver","printemps"]},{"c":"placard","n":"Pois chiches","q":"3 boîtes","u":"Curry de pois chiches","s":["ete","automne","hiver","printemps"]},{"c":"placard","n":"Lait de coco","q":"3 briques","u":"Dahl, curry de pois chiches","s":["ete","automne","hiver","printemps"]},{"c":"placard","n":"Olives","q":"1 bocal","u":"One-pot pasta, poulet mijoté","s":["ete","automne","hiver","printemps"]},{"c":"frigo","n":"Gnocchis frais","q":"2 paquets","u":"Poêlée de gnocchis","s":["ete","automne","hiver","printemps"]},{"c":"frigo","n":"Parmesan","q":"1 morceau","u":"Pâtes, gratins","s":["ete","automne","hiver","printemps"]}], FRESH={"ete":["Courgettes","Tomates","Tomates cerises","Poivrons","Aubergine","Basilic","Menthe","Chèvre frais","Feta","Salade verte"],"automne":["Aubergine","Courgettes","Poivron","Tomates","Salade verte"],"hiver":["Poireaux frais","Betteraves cuites","Emmental en dés","Salade verte"],"printemps":["Ricotta","Salade verte"]},
+      LABELS={"congelateur":"Congélateur","placard":"Placard","bac":"Bac à légumes / cave","frigo":"Frigo"}, NOTES={"congelateur":"La pièce maîtresse : c'est lui qui rend possible un plat décidé le soir même. Quantités pour environ quatre semaines de deux repas.","placard":"Réapprovisionné une fois par mois. Rien ici ne se périme avant plusieurs mois.","bac":"Les légumes de garde. La courge entière tient trois mois dans un endroit frais.","frigo":"Le socle permanent, à ne jamais laisser tomber à zéro."}, KIT=["Thon","Maïs","Riz long","Œufs","Pommes de terre","Oignons","Gruyère râpé","Une pâte brisée","Un sachet de légumes surgelés"], SL={"ete":"Été","automne":"Automne","hiver":"Hiver","printemps":"Printemps"}, COL={"ete":"#96590F","automne":"#B0522A","hiver":"#41708F","printemps":"#43702F"}, SD={"ete":"Courgettes, tomates, poivrons, aubergines, haricots. Basilic et citron.","automne":"Carottes, pommes de terre, lentilles, courges, poireaux. Thym et cumin.","hiver":"Poireaux, courge, brocolis, épinards, betterave. Muscade et laurier.","printemps":"Petits pois, épinards, carottes nouvelles, radis. Ciboulette et estragon."}, HERO=[["https://images.pexels.com/photos/6546425/pexels-photo-6546425.jpeg?auto=compress&cs=tinysrgb&w=1200","Poivrons et carottes rôtis"],["https://images.pexels.com/photos/36480176/pexels-photo-36480176.jpeg?auto=compress&cs=tinysrgb&w=1200","Poulet, carottes, pommes de terre"],["https://images.pexels.com/photos/36040965/pexels-photo-36040965.jpeg?auto=compress&cs=tinysrgb&w=1200","Ratatouille"],["https://images.pexels.com/photos/6128855/pexels-photo-6128855.jpeg?auto=compress&cs=tinysrgb&w=1200","Gratin de pommes de terre"]], FROZEN={"Petits pois":["top","Souvent meilleurs que les « frais » du rayon"],"Haricots verts":["top","Cuisson vapeur directe, sans décongeler"],"Épinards en branches":["top","Le seul à décongeler — pour pouvoir le presser"],"Brocolis":["top","Garder en bouquets, 5 min de vapeur"],"Poireaux émincés":["top","Fondre à découvert pour évaporer l'eau"],"Ratatouille cuisinée":["ok","Dépannage : les légumes sont fondus, pas dorés"]}, FRESHONLY=[["Courgettes","S'effondrent à la décongélation"],["Poivrons","Doivent rôtir et caraméliser — impossible surgelés"],["Tomates","Rendent trop d'eau, perdent toute tenue"],["Aubergine","Texture spongieuse après congélation"],["Pommes de terre","Se délitent ; de toute façon elles se gardent des semaines"],["Salade et crudités","Inutilisables crues après congélation"]], FI="Sur le plan nutritionnel, les surgelés sont au moins équivalents au frais, souvent meilleurs : ils sont blanchis et congelés dans les heures qui suivent la récolte, alors qu'un légume de rayon a plusieurs jours de transport derrière lui. Le blanchiment coûte 10 à 25 % des vitamines C et B au moment de la congélation, puis plus rien ne bouge. Ce qu'on perd, c'est la texture : les cristaux de glace percent les parois, le légume rend son eau et ne dore plus. D'où le partage ci-dessous.", FR="Cuis-les directement congelés, sans décongélation préalable : décongeler avant cuisson double la perte d'eau et transforme les haricots verts en chiffons. Seule exception, les épinards, qu'il faut décongeler pour les presser.", VIN=[["La maison — colza, balsamique, Maggi","3 c. à s. d'huile de colza · 1 c. à s. de vinaigre balsamique · quelques gouttes de Maggi · poivre","Salades vertes de tous les plats : rösti, dauphinois, tartes et quiches. Le balsamique et le Maggi tiennent tête à un plat gratiné.","Ne pas saler : le Maggi apporte déjà le sel. Et fouetter le vinaigre avec l'assaisonnement avant d'ajouter l'huile, sinon ça ne prend pas."],["La moutardée — pour tout ce qui est froid ou tiède","1 c. à c. bombée de moutarde · 2 c. à s. de vinaigre de cidre · 4 c. à s. d'huile de colza · sel, poivre","Salade de riz d'été, salade tiède de lentilles, œuf mollet. La moutarde émulsionne et tient l'assaisonnement dans un plat froid.","Le balsamique ne convient pas ici : il colore le riz en brun et son sucre se bat avec le thon et les tomates."],["La noix — pour l'hiver","2 c. à s. d'huile de noix · 2 c. à s. d'huile de colza · 1 c. à s. de vinaigre de cidre · 1 c. à c. de moutarde","Salade de riz d'hiver à la betterave, salade de lentilles, endives. L'huile de noix et la betterave sont un accord classique.","L'huile de noix ne se chauffe jamais et rancit vite : à garder au frigo une fois ouverte, et jamais pure — moitié colza."],["L'huile d'olive citron — pour le poisson et les légumes d'été","4 c. à s. d'huile d'olive · le jus d'un demi-citron · herbes fraîches ciselées · sel, poivre","Papillotes à l'ouverture, poivrons rôtis, tomates, feta. Tout ce qui est méditerranéen dans le répertoire.","À monter à froid et à verser au dernier moment : ni le citron ni le basilic ne supportent la cuisson."]], VI="Une seule vinaigrette pour tout, c'est ce qui finit par lasser. Quatre suffisent à couvrir le répertoire, et elles se font toutes en une minute avec ce qui est déjà en stock.";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+
+/* Adaptation a la largeur reelle du cadre, pas a celle du viewport : l'app doit se comporter
+   en mode telephone aussi bien sur un ecran de 375 px que dans un panneau d'apercu etroit,
+   ou une media query resterait aveugle. */
+let fitRaf=0;
+function fitWidth(){
+  fitRaf=0;
+  const w=document.documentElement.clientWidth;
+  if(!w) return; // cadre pas encore dimensionne (onglet en arriere-plan) : on ne conclut rien
+  const c=document.documentElement.classList;
+  c.toggle('w-md',w<=860); c.toggle('w-sm',w<=720); c.toggle('w-xs',w<=360);
+}
+function scheduleFit(){ if(!fitRaf) fitRaf=requestAnimationFrame(fitWidth); }
+fitWidth();
+addEventListener('resize',scheduleFit);
+addEventListener('orientationchange',scheduleFit);
+addEventListener('pageshow',scheduleFit);
+if(window.ResizeObserver){
+  const ro=new ResizeObserver(scheduleFit);
+  ro.observe(document.documentElement);
+  addEventListener('DOMContentLoaded',()=>{ro.observe(document.body);scheduleFit();});
+}
+const m=new Date().getMonth();
+let season=(m<=1||m===11)?'hiver':m<=4?'printemps':m<=7?'ete':'automne';
+let onlyExpress=false, onlyStar=false, onlyVeg=false, onlyTard=false, allSeasons=false, query='', wakeLock=null, listScroll=0;
+
+const sem=d=>d.tot>0&&d.tot<=45&&d.act<=20;
+function accent(){document.documentElement.style.setProperty('--accent',COL[season]);}
+
+/* --- barres de saison --- */
+function seasonBar(el){
+  el.innerHTML='<span class="lbl">Saison</span>'+Object.keys(SL).map(k=>
+    `<button class="sbtn" data-s="${k}">${SL[k]}</button>`).join('');
+  el.querySelectorAll('.sbtn').forEach(b=>b.addEventListener('click',()=>{season=b.dataset.s;renderAll();}));
+}
+['#sb-accueil','#sb-recettes','#sb-garde'].forEach(s=>seasonBar($(s)));
+
+/* --- accueil --- */
+function renderBand(){
+  $('#band').innerHTML=HERO.map(([u,c])=>`<figure><img src="${u}" alt="${c}" loading="lazy"><figcaption>${c}</figcaption></figure>`).join('');
+}
+function renderCarte(){
+  $('#carte-titre').textContent='Ce qu\'il y a '+({ete:'cet été',automne:'cet automne',hiver:'cet hiver',printemps:'ce printemps'}[season]);
+  $('#carte-desc').textContent=SD[season];
+  // un plat monte a midi ne demande rien le soir : il a toute sa place sur la carte
+  const bon=d=>d.act<=20&&d.tot<=45;
+  const duree=d=>d.tot>0?d.tot:d.act;
+  const list=Object.values(DATA).filter(d=>d.s.includes(season)&&bon(d)).sort((a,b)=>duree(a)-duree(b)).slice(0,7);
+  $('#carte').innerHTML=list.map(d=>`<li data-n="${d.n}" role="button" tabindex="0"><span class="ill">${d.photo?`<img src="${d.photo}" alt="" loading="lazy">`:ART[d.fam]}</span>
+    <span class="nom">${d.t}<em><span class="pill tot">${d.tot?d.tot+' min':'monté à midi'}</span><span class="pill act">${d.act} min actives</span>${d.midiReq?'<span class="pill midi">Choix à midi</span>':'<span class="pill libre">Choix à 17 h</span>'}${d.star?'<span class="pill star">★ Sans course</span>':''}</em></span>
+    </li>`).join('');
+  $$('#carte li').forEach(li=>{
+    const go=()=>goRecipe(+li.dataset.n);
+    li.addEventListener('click',go);
+    li.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}});
+  });
+}
+
+/* --- recettes --- */
+function match(d,ignoreSeason){
+  if(!ignoreSeason && !d.s.includes(season)) return false;
+  if(onlyExpress && !sem(d)) return false;
+  if(onlyStar && !d.star) return false;
+  if(onlyVeg && !d.veg) return false;
+  if(onlyTard && d.midiReq) return false;
+  if(query){
+    const hay=(d.t+' '+d.ing.join(' ')+' '+d.famL).toLowerCase();
+    if(!hay.includes(query)) return false;
+  }
+  return true;
+}
+function renderGrid(){
+  const dur=d=>d.tot>0?d.tot:d.act;
+  const list=Object.values(DATA).filter(d=>match(d,allSeasons)).sort((a,b)=>dur(a)-dur(b));
+  const empty=$('#empty');
+  if(list.length){
+    empty.style.display='none';
+    empty.innerHTML='';
+  }else{
+    // hors saison : ne pas laisser l'utilisateur sur un cul-de-sac quand le plat existe ailleurs dans l'année
+    const ailleurs=allSeasons?0:Object.values(DATA).filter(d=>match(d,true)).length;
+    empty.style.display='block';
+    empty.innerHTML='Aucun plat ne correspond à ces critères'+(allSeasons?'.':` en ${SL[season].toLowerCase()}.`)
+      +(ailleurs?`<button type="button" id="widen">${ailleurs>1?`Voir les ${ailleurs} plats des autres saisons`:'Voir le plat d\'une autre saison'}</button>`:'');
+    const w=empty.querySelector('#widen');
+    if(w) w.addEventListener('click',()=>{allSeasons=true;syncChips();renderGrid();});
+  }
+  $('#grid').innerHTML=list.map(d=>`<button class="rcard" data-n="${d.n}">
+    <span class="thumb">${d.photo?`<img src="${d.photo}" alt="" loading="lazy">`:ART[d.fam]}</span>
+    <span class="body"><span class="ttl">${d.t}</span>
+      <span class="rmeta"><span class="pill tot">${d.tot?d.tot+' min':'à midi'}</span><span class="pill act">${d.act} min actives</span>${d.midiReq?'<span class="pill midi">Choix à midi</span>':'<span class="pill libre">Choix à 17 h</span>'}${d.star?'<span class="pill star">★ Sans course</span>':''}${allSeasons?`<span class="pill libre">${d.s.map(s=>SL[s]).join(', ')}</span>`:''}</span>
+    </span></button>`).join('');
+  $$('.rcard').forEach(c=>c.addEventListener('click',()=>goRecipe(+c.dataset.n)));
+}
+function resetFilters(){
+  onlyExpress=onlyStar=onlyVeg=onlyTard=false; allSeasons=true; query='';
+  $('#q').value=''; syncChips(); renderGrid();
+}
+function syncChips(){
+  $('#f-express').setAttribute('aria-pressed',String(onlyExpress));
+  $('#f-star').setAttribute('aria-pressed',String(onlyStar));
+  $('#f-all').setAttribute('aria-pressed',String(allSeasons));
+  $('#f-veg').setAttribute('aria-pressed',String(onlyVeg));
+  $('#f-tard').setAttribute('aria-pressed',String(onlyTard));
+  const tousActifs=allSeasons&&!onlyExpress&&!onlyStar&&!onlyVeg&&!onlyTard&&!query;
+  const btn=$('#f-reset');
+  btn.textContent=tousActifs?'':'Voir les '+Object.keys(DATA).length+' recettes, toutes saisons';
+  btn.closest('.allrow').style.display=tousActifs?'none':'block';
+}
+function openRecipe(n,from){
+  const d=DATA[n];
+  if(!d) return;
+  if(wakeLock){wakeLock.release();wakeLock=null;}
+  show('recettes');
+  $('#liste').style.display='none';
+  const det=$('#detail'); det.classList.add('on');
+  det.innerHTML=`<button class="back">← ${from==='accueil'?'Retour à la carte':'Retour aux recettes'}</button>
+  <div class="dhead">
+    <div class="dshot">${d.photo?`<img src="${d.photo}" alt="">`:ART[d.fam]}</div>
+    <div>
+      <h2>${d.t}</h2>
+      <div class="tags">
+        <span class="tag solid">${d.tot?d.tot+' min au total':d.act+' min à midi'}</span>
+        ${d.tot?`<span class="tag">${d.act} min actives</span>`:''}
+        <span class="tag">${d.famL}</span>
+        ${d.s.map(s=>`<span class="tag">${SL[s]}</span>`).join('')}
+        ${d.star?'<span class="tag acc">★ Sans course</span>':''}
+        ${d.veg?'<span class="tag acc">Vegan</span>':''}
+      </div>
+      ${d.frais?`<p style="margin:0;color:var(--ink-soft);font-size:15px">À acheter frais : ${d.frais}.</p>`:'<p style="margin:0;color:var(--accent);font-size:15px">Rien à acheter : tout est dans le garde-manger.</p>'}
+      ${d.midi
+        ?`<div class="midibox${d.midiReq?'':' libre'}"><span class="h">${d.midiReq?'À midi':'À midi · facultatif'}</span><p>${d.midi}</p></div>`
+        :'<div class="midibox libre"><span class="h">À midi</span><p>Rien à faire. Ce plat se décide encore à 17 h.</p></div>'}
+    </div>
+  </div>
+  <div class="dcols">
+    <aside class="ing-box">
+      <h3>Ingrédients · 4 personnes</h3>
+      <ul class="ing-list">${d.ing.map((x,i)=>`<li><input type="checkbox" id="i${n}_${i}"><label for="i${n}_${i}">${x}</label></li>`).join('')}</ul>
+      ${d.nut?`<div class="nutri">
+        <h4>Par personne · une part sur quatre</h4>
+        <dl>
+          <div><dd>${d.nut[0]}</dd><dt>kcal</dt></div>
+          <div><dd>${d.nut[1]} g</dd><dt>Protéines</dt></div>
+          <div><dd>${d.nut[2]} g</dd><dt>Lipides</dt></div>
+          <div><dd>${d.nut[3]} g</dd><dt>Glucides</dt></div>
+        </dl>
+        <p class="src">Estimation calculée à partir des quantités ci-dessus et d'une table de composition standard. Compte 10 % d'écart selon les marques et la taille réelle des légumes.</p>
+      </div>`:''}
+    </aside>
+    <div>
+      <ol class="steps">${d.steps.map(s=>`<li><span>${s}</span></li>`).join('')}</ol>
+      ${d.tip?`<div class="tipbox"><b>Le point qui fait rater</b>${d.tip}</div>`:''}
+      <label class="wake"><input type="checkbox" id="wake"> Garder l'écran allumé pendant la cuisine</label>
+    </div>
+  </div>`;
+  det.querySelector('.back').addEventListener('click',goBack);
+  const wk=det.querySelector('#wake');
+  if('wakeLock' in navigator){
+    wk.addEventListener('change',async e=>{
+      if(e.target.checked){try{wakeLock=await navigator.wakeLock.request('screen');}catch(_){e.target.checked=false;}}
+      else if(wakeLock){wakeLock.release();wakeLock=null;}
+    });
+  } else { wk.closest('.wake').style.display='none'; }
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function closeRecipe(){
+  if(wakeLock){wakeLock.release();wakeLock=null;}
+  const det=$('#detail');
+  if(!det.classList.contains('on')) return;
+  det.classList.remove('on');
+  det.innerHTML='';
+  $('#liste').style.display='block';
+}
+
+/* --- garde-manger --- */
+function renderPantry(){
+  const cats=['congelateur','placard','bac','frigo'];
+  $('#pantry').innerHTML=cats.map(c=>{
+    const items=PANTRY.filter(p=>p.c===c && p.s.includes(season));
+    if(!items.length) return '';
+    return `<h3 class="tbl-title">${LABELS[c]} <span>— ${NOTES[c]}</span></h3>
+    <table><thead><tr><th>Produit</th><th>Quantité</th><th>Sert à</th></tr></thead><tbody>
+    ${items.map(p=>{const f=FROZEN[p.n];
+      const badge=f?`<span class="bdg ${f[0]}">${f[0]==='top'?'aussi bon que le frais':'dépannage'}</span>`:'';
+      return `<tr><td>${p.n} ${badge}</td><td class="q">${p.q}</td><td class="u">${f?f[1]:p.u}</td></tr>`;}).join('')}
+    </tbody></table>`;
+  }).join('');
+  $('#kit').textContent=KIT.join(', ').toLowerCase();
+  $('#fresh-label').textContent='— '+SL[season].toLowerCase();
+  $('#fresh').textContent=FRESH[season].join(' · ')+'.';
+  $('#fi').textContent=FI; $('#fr').textContent=FR; $('#vi').textContent=VI;
+  $('#vins').innerHTML=VIN.map(([t,ing,usage,tip])=>`<article class="vin">
+    <h3>${t}</h3><p class="vin-ing">${ing}</p><p class="vin-use">${usage}</p>
+    <p class="vin-tip"><b>À savoir</b>${tip}</p></article>`).join('');
+  $('#tb-frozen').innerHTML=Object.entries(FROZEN).filter(([,v])=>v[0]==='top')
+    .map(([k,v])=>`<tr><td>${k}</td><td class="u">${v[1]}</td></tr>`).join('');
+  $('#tb-fresh').innerHTML=FRESHONLY.map(([k,v])=>`<tr><td>${k}</td><td class="u">${v}</td></tr>`).join('');
+}
+
+/* --- urgence --- */
+function renderUrg(){
+  const ns=Object.values(DATA).filter(d=>d.star).length;
+  document.getElementById('star-count').textContent=ns;
+  document.getElementById('star-count2').textContent=ns;
+  document.getElementById('sem-count').textContent=Object.values(DATA).filter(sem).length;
+  const tard=Object.values(DATA).filter(d=>!d.midiReq).length;
+  document.getElementById('tard-count').textContent=tard;
+  document.getElementById('tard-count2').textContent=tard;
+  const urg=Object.values(DATA).filter(d=>d.star&&sem(d)).sort((a,b)=>a.tot-b.tot).map(d=>d.n);
+  document.getElementById('urg-count').textContent=urg.length;
+  $('#urg').innerHTML=urg.map(n=>{const d=DATA[n];
+    return `<tr><td>${d.t}</td><td class="q">${d.tot} min</td><td class="u">${d.ing.slice(0,3).join(', ')}</td></tr>`;}).join('');
+}
+
+/* --- navigation ---
+   L'URL est la source de vérité : #accueil, #recettes, #garde, #plan, #rN pour une fiche.
+   Chaque écran est une entrée d'historique, donc le bouton retour du navigateur
+   (et le geste retour Android) reste cohérent, et une fiche est partageable. */
+const VIEWS=['accueil','recettes','garde','plan'];
+function show(v){
+  $$('.view').forEach(x=>x.classList.toggle('on',x.id===v));
+  $$('.nav button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.view===v)));
+}
+function currentView(){
+  const on=$$('.view').find(x=>x.classList.contains('on'));
+  return on?on.id:'accueil';
+}
+function go(hash){
+  if(location.hash==='#'+hash) return;
+  const depth=(history.state&&history.state.depth||0)+1;
+  history.pushState({depth,from:currentView()},'','#'+hash);
+  applyRoute();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function goRecipe(n){
+  if(currentView()==='recettes') listScroll=window.scrollY;
+  go('r'+n);
+}
+function goBack(){
+  // deep link direct (favori, lien partagé) : pas d'entrée précédente à nous, on retombe sur la liste
+  if(history.state&&history.state.depth>0) history.back();
+  else go('recettes');
+}
+function applyRoute(){
+  const h=location.hash.slice(1);
+  const m=h.match(/^r(\d+)$/);
+  if(m&&DATA[m[1]]){
+    openRecipe(+m[1],history.state&&history.state.from);
+    return;
+  }
+  const wasDetail=$('#detail').classList.contains('on');
+  const v=VIEWS.includes(h)?h:'accueil';
+  closeRecipe();
+  show(v);
+  // retour d'une fiche vers la liste : on reprend où l'utilisateur en était
+  if(wasDetail&&v==='recettes'&&listScroll){window.scrollTo({top:listScroll,behavior:'instant'});}
+  listScroll=0;
+}
+$$('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
+$$('[data-goto]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.goto)));
+window.addEventListener('popstate',applyRoute);
+
+$('#q').addEventListener('input',e=>{query=e.target.value.trim().toLowerCase();renderGrid();});
+$('#f-express').addEventListener('click',()=>{onlyExpress=!onlyExpress;syncChips();renderGrid();});
+$('#f-star').addEventListener('click',()=>{onlyStar=!onlyStar;syncChips();renderGrid();});
+$('#f-all').addEventListener('click',()=>{allSeasons=!allSeasons;syncChips();renderGrid();});
+$('#f-veg').addEventListener('click',()=>{onlyVeg=!onlyVeg;syncChips();renderGrid();});
+$('#f-tard').addEventListener('click',()=>{onlyTard=!onlyTard;syncChips();renderGrid();});
+$('#f-reset').addEventListener('click',resetFilters);
+
+function renderAll(){
+  accent();
+  $$('.sbtn').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.s===season)));
+  renderCarte();renderGrid();renderPantry();
+}
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+history.replaceState({depth:0,from:null},'',location.hash||location.pathname+location.search);
+renderBand();renderUrg();syncChips();renderAll();applyRoute();
+</script>
+</body>
+</html>
