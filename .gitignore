@@ -1,3 +1,6 @@
 .DS_Store
 *.backup.html
 _*.html
+# extractions de donnees creees pendant le travail
+d[A-Z].js
+*.tmp.js
